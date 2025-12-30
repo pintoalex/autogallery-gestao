@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autogallery - Sistema de Gestão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#d97706',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-primary text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                </svg>
+                <div>
+                    <h1 class="text-2xl font-bold">Autogallery</h1>
+                    <p class="text-xs text-gray-300">Sistema de Gestão</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-4 space-y-2">
+                <button onclick="showPage('estoque')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📦 Estoque</button>
+                <button onclick="showPage('clientes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">👥 Clientes</button>
+                <button onclick="showPage('cadastro-veiculo')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">🚗 Cadastrar Veículo</button>
+                <button onclick="showPage('compras')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">🛒 Compras</button>
+                <button onclick="showPage('vendas')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📈 Vendas</button>
+                <button onclick="showPage('consignacoes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📄 Consignações</button>
+                <button onclick="showPage('intermediacoes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">⚙️ Intermediações</button>
+                <button onclick="showPage('relatorios')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📊 Relatórios</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            
+            <!-- PÁGINA: ESTOQUE -->
+            <div id="page-estoque" class="page">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Estoque de Veículos</h1>
+                <div class="bg-gradient-to-r from-primary to-blue-900 text-white rounded-lg p-6 mb-6">
+                    <p class="text-sm opacity-90">Valor Total em Estoque</p>
+                    <p class="text-3xl font-bold mt-1" id="valor-estoque">R$ 0,00</p>
+                </div>
+                <div id="lista-estoque" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- PÁGINA: CLIENTES -->
+            <div id="page-clientes" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Clientes</h1>
+                    <button onclick="showModal('modal-cliente')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Novo Cliente</button>
+                </div>
+                <div id="lista-clientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- PÁGINA: CADASTRO VEÍCULO -->
+            <div id="page-cadastro-veiculo" class="page hidden">
+                <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-6">Cadastrar Veículo</h1>
+                    <form id="form-veiculo" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="v-marca" placeholder="Marca" required class="px-4 py-2 border rounded-lg">
+                            <input type="text" id="v-modelo" placeholder="Modelo" required class="px-4 py-2 border rounded-lg">
+                        </div>
+                        <input type="text" id="v-versao" placeholder="Versão (opcional)" class="w-full px-4 py-2 border rounded-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="v-ano-fab" placeholder="Ano Fabricação" required class="px-4 py-2 border rounded-lg">
+                            <input type="number" id="v-ano-mod" placeholder="Ano Modelo" required class="px-4 py-2 border rounded-lg">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="v-cor" placeholder="Cor" required class="px-4 py-2 border rounded-lg">
+                            <input type="text" id="v-placa" placeholder="Placa" required class="px-4 py-2 border rounded-lg">
+                        </div>
+                        <input type="number" id="v-km" placeholder="Quilometragem" required class="w-full px-4 py-2 border rounded-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="v-combustivel" required class="px-4 py-2 border rounded-lg">
+                                <option value="">Combustível</option>
+                                <option value="flex">Flex</option>
+                                <option value="gasolina">Gasolina</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="eletrico">Elétrico</option>
+                            </select>
+                            <select id="v-cambio" required class="px-4 py-2 border rounded-lg">
+                                <option value="">Câmbio</option>
+                                <option value="manual">Manual</option>
+                                <option value="automatico">Automático</option>
+                            </select>
+                        </div>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="v-blindado" class="w-4 h-4">
+                            <span>Veículo Blindado</span>
+                        </label>
+                        <textarea id="v-obs" placeholder="Observações" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-900">Cadastrar Veículo</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PÁGINA: COMPRAS -->
+            <div id="page-compras" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Compras</h1>
+                    <button onclick="showModal('modal-compra')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Compra</button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <table class="w-full" id="tabela-compras">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3">Data</th>
+                                <th class="text-left py-3">Veículo</th>
+                                <th class="text-left py-3">Fornecedor</th>
+                                <th class="text-left py-3">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-compras"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PÁGINA: VENDAS -->
+            <div id="page-vendas" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Vendas</h1>
+                    <button onclick="showModal('modal-venda')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Venda</button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <table class="w-full" id="tabela-vendas">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3">Data</th>
+                                <th class="text-left py-3">Veículo</th>
+                                <th class="text-left py-3">Cliente</th>
+                                <th class="text-left py-3">Valor</th>
+                                <th class="text-left py-3">Lucro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-vendas"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PÁGINA: CONSIGNAÇÕES -->
+            <div id="page-consignacoes" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Consignações</h1>
+                    <button onclick="showModal('modal-consignacao')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Consignação</button>
+                </div>
+                <div id="lista-consignacoes" class="space-y-4"></div>
+            </div>
+
+            <!-- PÁGINA: INTERMEDIAÇÕES -->
+            <div id="page-intermediacoes" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Intermediações</h1>
+                    <button onclick="showModal('modal-intermediacao')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Intermediação</button>
+                </div>
+                <div id="lista-intermediacoes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- PÁGINA: RELATÓRIOS -->
+            <div id="page-relatorios" class="page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Relatórios Financeiros</h1>
+                    <div class="space-x-2">
+                        <button onclick="exportarDados()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-yellow-700">⬇️ Exportar</button>
+                        <button onclick="importarDados()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-yellow-700">⬆️ Importar</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-lg p-6">
+                        <p class="text-sm opacity-90">Receita Total</p>
+                        <p class="text-2xl font-bold mt-1" id="rel-receita">R$ 0,00</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-primary to-blue-900 text-white rounded-lg p-6">
+                        <p class="text-sm opacity-90">Lucro Bruto</p>
+                        <p class="text-2xl font-bold mt-1" id="rel-lucro">R$ 0,00</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-secondary to-yellow-700 text-white rounded-lg p-6">
+                        <p class="text-sm opacity-90">Margem Média</p>
+                        <p class="text-2xl font-bold mt-1" id="rel-margem">0%</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-lg p-6">
+                        <p class="text-sm opacity-90">Valor em Estoque</p>
+                        <p class="text-2xl font-bold mt-1" id="rel-estoque">R$ 0,00</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL: CLIENTE -->
+    <div id="modal-cliente" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <h2 class="text-2xl font-bold mb-4">Novo Cliente</h2>
+            <form id="form-cliente" class="space-y-4">
+                <input type="text" id="c-nome" placeholder="Nome Completo" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="text" id="c-cpf" placeholder="CPF" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="text" id="c-telefone" placeholder="Telefone" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="email" id="c-email" placeholder="Email" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="text" id="c-endereco" placeholder="Endereço" required class="w-full px-4 py-2 border rounded-lg">
+                <select id="c-tipo" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Tipo</option>
+                    <option value="comprador">Comprador</option>
+                    <option value="fornecedor">Fornecedor</option>
+                </select>
+                <div class="flex space-x-3">
+                    <button type="button" onclick="hideModal('modal-cliente')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: COMPRA -->
+    <div id="modal-compra" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <h2 class="text-2xl font-bold mb-4">Nova Compra</h2>
+            <form id="form-compra" class="space-y-4">
+                <select id="comp-veiculo" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Veículo</option>
+                </select>
+                <select id="comp-fornecedor" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Fornecedor</option>
+                </select>
+                <input type="date" id="comp-data" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="comp-valor" placeholder="Valor Pago" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="hideModal('modal-compra')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: VENDA -->
+    <div id="modal-venda" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <h2 class="text-2xl font-bold mb-4">Nova Venda</h2>
+            <form id="form-venda" class="space-y-4">
+                <select id="vend-veiculo" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Veículo</option>
+                </select>
+                <select id="vend-cliente" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Cliente</option>
+                </select>
+                <input type="date" id="vend-data" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="vend-valor" placeholder="Valor de Venda" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="hideModal('modal-venda')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CONSIGNAÇÃO -->
+    <div id="modal-consignacao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <h2 class="text-2xl font-bold mb-4">Nova Consignação</h2>
+            <form id="form-consignacao" class="space-y-4">
+                <select id="cons-veiculo" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Veículo</option>
+                </select>
+                <select id="cons-proprietario" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Proprietário</option>
+                </select>
+                <input type="date" id="cons-data" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="cons-prazo" placeholder="Prazo (dias)" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="cons-percentual" placeholder="Percentual da Loja (%)" step="0.1" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="cons-valor-min" placeholder="Valor Mínimo" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="hideModal('modal-consignacao')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: INTERMEDIAÇÃO -->
+    <div id="modal-intermediacao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <h2 class="text-2xl font-bold mb-4">Nova Intermediação</h2>
+            <form id="form-intermediacao" class="space-y-4">
+                <select id="int-cliente" required class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Selecione o Cliente</option>
+                </select>
+                <input type="text" id="int-veiculo" placeholder="Veículo Desejado" required class="w-full px-4 py-2 border rounded-lg">
+                <textarea id="int-espec" placeholder="Especificações" rows="3" required class="w-full px-4 py-2 border rounded-lg"></textarea>
+                <input type="number" id="int-orcamento" placeholder="Orçamento Máximo" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
+                <input type="number" id="int-comissao" placeholder="Valor da Comissão (opcional)" step="0.01" class="w-full px-4 py-2 border rounded-lg">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="hideModal('modal-intermediacao')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DADOS
+        let clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+        let veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
+        let compras = JSON.parse(localStorage.getItem('compras') || '[]');
+        let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+        let consignacoes = JSON.parse(localStorage.getItem('consignacoes') || '[]');
+        let intermediacoes = JSON.parse(localStorage.getItem('intermediacoes') || '[]');
+
+        // NAVEGAÇÃO
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            renderPage(pageId);
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.getElementById(modalId).classList.add('flex');
+            preencherSelects();
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        // RENDER
+        function renderPage(pageId) {
+            if (pageId === 'estoque') renderEstoque();
+            if (pageId === 'clientes') renderClientes();
+            if (pageId === 'compras') renderCompras();
+            if (pageId === 'vendas') renderVendas();
+            if (pageId === 'consignacoes') renderConsignacoes();
+            if (pageId === 'intermediacoes') renderIntermediacoes();
+            if (pageId === 'relatorios') renderRelatorios();
+        }
+
+        function renderEstoque() {
+            const lista = document.getElementById('lista-estoque');
+            const valorTotal = veiculos.filter(v => v.status === 'disponivel').reduce((acc, v) => {
+                const compra = compras.find(c => c.veiculoId === v.id);
+                return acc + (compra?.valor || 0);
+            }, 0);
+            
+            document.getElementById('valor-estoque').textContent = formatMoney(valorTotal);
+            
+            lista.innerHTML = veiculos.map(v => `
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${v.status === 'disponivel' ? 'bg-green-500' : 'bg-gray-500'} text-white">
+                            ${v.status === 'disponivel' ? 'Disponível' : 'Vendido'}
+                        </span>
+                        ${v.blindado ? '<span class="px-3 py-1 rounded-full text-xs font-semibold bg-secondary text-white">Blindado</span>' : ''}
+                    </div>
+                    <div class="bg-gray-200 rounded-lg h-48 flex items-center justify-center mb-4">
+                        <span class="text-6xl">🚗</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${v.marca} ${v.modelo}</h3>
+                    <p class="text-sm text-gray-600">Ano: ${v.anoFabricacao}/${v.anoModelo}</p>
+                    <p class="text-sm text-gray-600">Cor: ${v.cor}</p>
+                    <p class="text-sm text-gray-600">KM: ${v.km.toLocaleString('pt-BR')}</p>
+                    <p class="text-sm text-gray-600">Placa: ${v.placa}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderClientes() {
+            const lista = document.getElementById('lista-clientes');
+            lista.innerHTML = clientes.map(c => `
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold ${c.tipo === 'comprador' ? 'bg-green-500' : 'bg-secondary'} text-white">
+                        ${c.tipo === 'comprador' ? 'Comprador' : 'Fornecedor'}
+                    </span>
+                    <h3 class="text-xl font-bold mt-3 mb-2">${c.nome}</h3>
+                    <p class="text-sm text-gray-600">CPF: ${c.cpf}</p>
+                    <p class="text-sm text-gray-600">Telefone: ${c.telefone}</p>
+                    <p class="text-sm text-gray-600">Email: ${c.email}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderCompras() {
+            const lista = document.getElementById('lista-compras');
+            lista.innerHTML = compras.map(c => {
+                const veiculo = veiculos.find(v => v.id === c.veiculoId);
+                const fornecedor = clientes.find(cl => cl.id === c.fornecedorId);
+                return `
+                    <tr class="border-b">
+                        <td class="py-3">${new Date(c.data).toLocaleDateString('pt-BR')}</td>
+                        <td class="py-3">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</td>
+                        <td class="py-3">${fornecedor ? fornecedor.nome : 'N/A'}</td>
+                        <td class="py-3 font-semibold text-primary">${formatMoney(c.valor)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderVendas() {
+            const lista = document.getElementById('lista-vendas');
+            lista.innerHTML = vendas.map(v => {
+                const veiculo = veiculos.find(ve => ve.id === v.veiculoId);
+                const cliente = clientes.find(c => c.id === v.clienteId);
+                return `
+                    <tr class="border-b">
+                        <td class="py-3">${new Date(v.data).toLocaleDateString('pt-BR')}</td>
+                        <td class="py-3">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</td>
+                        <td class="py-3">${cliente ? cliente.nome : 'N/A'}</td>
+                        <td class="py-3 font-semibold text-primary">${formatMoney(v.valor)}</td>
+                        <td class="py-3 font-semibold text-green-600">${formatMoney(v.lucro || 0)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderConsignacoes() {
+            const lista = document.getElementById('lista-consignacoes');
+            lista.innerHTML = consignacoes.map(c => {
+                const veiculo = veiculos.find(v => v.id === c.veiculoId);
+                const proprietario = clientes.find(cl => cl.id === c.proprietarioId);
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-2">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</h3>
+                        <p class="text-sm text-gray-600">Proprietário: ${proprietario ? proprietario.nome : 'N/A'}</p>
+                        <p class="text-sm text-gray-600">Prazo: ${c.prazo} dias</p>
+                        <p class="text-sm text-gray-600">Percentual Loja: ${c.percentual}%</p>
+                        <p class="text-sm text-gray-600">Valor Mínimo: ${formatMoney(c.valorMinimo)}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderIntermediacoes() {
+            const lista = document.getElementById('lista-intermediacoes');
+            lista.innerHTML = intermediacoes.map(i => {
+                const cliente = clientes.find(c => c.id === i.clienteId);
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500 text-white">Em Busca</span>
+                        <h3 class="text-xl font-bold mt-3 mb-2">${i.veiculoDesejado}</h3>
+                        <p class="text-sm text-gray-600">Cliente: ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p class="text-sm text-gray-600">Orçamento: ${formatMoney(i.orcamento)}</p>
+                        ${i.comissao ? `<p class="text-sm text-gray-600">Comissão: ${formatMoney(i.comissao)}</p>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRelatorios() {
+            const totalVendas = vendas.reduce((acc, v) => acc + v.valor, 0);
+            const totalLucro = vendas.reduce((acc, v) => acc + (v.lucro || 0), 0);
+            const margem = totalVendas > 0 ? (totalLucro / totalVendas * 100).toFixed(1) : 0;
+            const valorEstoque = veiculos.filter(v => v.status === 'disponivel').reduce((acc, v) => {
+                const compra = compras.find(c => c.veiculoId === v.id);
+                return acc + (compra?.valor || 0);
+            }, 0);
+
+            document.getElementById('rel-receita').textContent = formatMoney(totalVendas);
+            document.getElementById('rel-lucro').textContent = formatMoney(totalLucro);
+            document.getElementById('rel-margem').textContent = margem + '%';
+            document.getElementById('rel-estoque').textContent = formatMoney(valorEstoque);
+        }
+
+        // FORMS
+        document.getElementById('form-cliente').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cliente = {
+                id: Date.now().toString(),
+                nome: document.getElementById('c-nome').value,
+                cpf: document.getElementById('c-cpf').value,
+                telefone: document.getElementById('c-telefone').value,
+                email: document.getElementById('c-email').value,
+                endereco: document.getElementById('c-endereco').value,
+                tipo: document.getElementById('c-tipo').value
+            };
+            clientes.push(cliente);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            hideModal('modal-cliente');
+            e.target.reset();
+            showPage('clientes');
+        });
+
+        document.getElementById('form-veiculo').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const veiculo = {
+                id: Date.now().toString(),
+                marca: document.getElementById('v-marca').value,
+                modelo: document.getElementById('v-modelo').value,
+                versao: document.getElementById('v-versao').value,
+                anoFabricacao: parseInt(document.getElementById('v-ano-fab').value),
+                anoModelo: parseInt(document.getElementById('v-ano-mod').value),
+                cor: document.getElementById('v-cor').value,
+                placa: document.getElementById('v-placa').value,
+                km: parseInt(document.getElementById('v-km').value),
+                combustivel: document.getElementById('v-combustivel').value,
+                cambio: document.getElementById('v-cambio').value,
+                blindado: document.getElementById('v-blindado').checked,
+                observacoes: document.getElementById('v-obs').value,
+                status: 'disponivel'
+            };
+            veiculos.push(veiculo);
+            localStorage.setItem('veiculos', JSON.stringify(veiculos));
+            alert('Veículo cadastrado com sucesso!');
+            e.target.reset();
+            showPage('estoque');
+        });
+
+        document.getElementById('form-compra').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const compra = {
+                id: Date.now().toString(),
+                veiculoId: document.getElementById('comp-veiculo').value,
+                fornecedorId: document.getElementById('comp-fornecedor').value,
+                data: document.getElementById('comp-data').value,
+                valor: parseFloat(document.getElementById('comp-valor').value)
+            };
+            compras.push(compra);
+            localStorage.setItem('compras', JSON.stringify(compras));
+            hideModal('modal-compra');
+            e.target.reset();
+            showPage('compras');
+        });
+
+        document.getElementById('form-venda').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const veiculoId = document.getElementById('vend-veiculo').value;
+            const valor = parseFloat(document.getElementById('vend-valor').value);
+            const compra = compras.find(c => c.veiculoId === veiculoId);
+            const lucro = compra ? valor - compra.valor : 0;
+
+            const venda = {
+                id: Date.now().toString(),
+                veiculoId: veiculoId,
+                clienteId: document.getElementById('vend-cliente').value,
+                data: document.getElementById('vend-data').value,
+                valor: valor,
+                lucro: lucro
+            };
+            vendas.push(venda);
+            
+            const veiculo = veiculos.find(v => v.id === veiculoId);
+            if (veiculo) veiculo.status = 'vendido';
+            
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+            localStorage.setItem('veiculos', JSON.stringify(veiculos));
+            hideModal('modal-venda');
+            e.target.reset();
+            showPage('vendas');
+        });
+
+        document.getElementById('form-consignacao').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const consignacao = {
+                id: Date.now().toString(),
+                veiculoId: document.getElementById('cons-veiculo').value,
+                proprietarioId: document.getElementById('cons-proprietario').value,
+                data: document.getElementById('cons-data').value,
+                prazo: parseInt(document.getElementById('cons-prazo').value),
+                percentual: parseFloat(document.getElementById('cons-percentual').value),
+                valorMinimo: parseFloat(document.getElementById('cons-valor-min').value)
+            };
+            consignacoes.push(consignacao);
+            localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
+            hideModal('modal-consignacao');
+            e.target.reset();
+            showPage('consignacoes');
+        });
+
+        document.getElementById('form-intermediacao').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const intermediacao = {
+                id: Date.now().toString(),
+                clienteId: document.getElementById('int-cliente').value,
+                veiculoDesejado: document.getElementById('int-veiculo').value,
+                especificacoes: document.getElementById('int-espec').value,
+                orcamento: parseFloat(document.getElementById('int-orcamento').value),
+                comissao: parseFloat(document.getElementById('int-comissao').value) || 0
+            };
+            intermediacoes.push(intermediacao);
+            localStorage.setItem('intermediacoes', JSON.stringify(intermediacoes));
+            hideModal('modal-intermediacao');
+            e.target.reset();
+            showPage('intermediacoes');
+        });
+
+        // UTILS
+        function formatMoney(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+
+        function preencherSelects() {
+            const veiculosDisp = veiculos.filter(v => v.status === 'disponivel');
+            const fornecedores = clientes.filter(c => c.tipo === 'fornecedor');
+            const compradores = clientes.filter(c => c.tipo === 'comprador');
+
+            document.getElementById('comp-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
+                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
+            
+            document.getElementById('comp-fornecedor').innerHTML = '<option value="">Selecione o Fornecedor</option>' + 
+                fornecedores.map(f => `<option value="${f.id}">${f.nome}</option>`).join('');
+
+            document.getElementById('vend-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
+                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
+            
+            document.getElementById('vend-cliente').innerHTML = '<option value="">Selecione o Cliente</option>' + 
+                compradores.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+
+            document.getElementById('cons-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
+                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
+            
+            document.getElementById('cons-proprietario').innerHTML = '<option value="">Selecione o Proprietário</option>' + 
+                clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+
+            document.getElementById('int-cliente').innerHTML = '<option value="">Selecione o Cliente</option>' + 
+                clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        }
+
+        function exportarDados() {
+            const dados = { clientes, veiculos, compras, vendas, consignacoes, intermediacoes };
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autogallery-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function importarDados() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const dados = JSON.parse(event.target.result);
+                    clientes = dados.clientes || [];
+                    veiculos = dados.veiculos || [];
+                    compras = dados.compras || [];
+                    vendas = dados.vendas || [];
+                    consignacoes = dados.consignacoes || [];
+                    intermediacoes = dados.intermediacoes || [];
+                    localStorage.setItem('clientes', JSON.stringify(clientes));
+                    localStorage.setItem('veiculos', JSON.stringify(veiculos));
+                    localStorage.setItem('compras', JSON.stringify(compras));
+                    localStorage.setItem('vendas', JSON.stringify(vendas));
+                    localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
+                    localStorage.setItem('intermediacoes', JSON.stringify(intermediacoes));
+                    alert('Dados importados com sucesso!');
+                    location.reload();
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // INIT
+        showPage('estoque');
+    </script>
+
+</body>
+</html>
