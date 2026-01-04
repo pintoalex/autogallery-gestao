@@ -1,686 +1,1750 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Autogallery - Sistema de Gestão</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #2563eb; /* Blue theme */
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Layout Container */
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar Navigation */
+        nav.sidebar {
+            background-color: #ffffff;
+            width: 250px;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        nav.sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav.sidebar ul li {
+            margin-bottom: 5px;
+        }
+
+        nav.sidebar ul li a {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        nav.sidebar ul li a:hover {
+            background-color: #e0e7ff;
+            color: #2563eb;
+            border-left-color: #2563eb;
+        }
+
+        nav.sidebar ul li a.active {
+            background-color: #e0e7ff;
+            color: #2563eb;
+            font-weight: 600;
+            border-left-color: #2563eb;
+        }
+
+        /* Main Content Area */
+        main.content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #2563eb;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 10px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+
+        .form-group .checkbox-group label {
+            display: inline-block;
+            margin-right: 15px;
+            font-weight: normal;
+        }
+
+        .form-group .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-edit {
+            background-color: #f59e0b;
+            margin-left: 5px;
+        }
+
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            margin-left: 5px;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-restore {
+            background-color: #22c55e;
+            margin-left: 5px;
+        }
+
+        .btn-restore:hover {
+            background-color: #16a34a;
+        }
+
+        /* Cards Display */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            color: #2563eb;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .card p strong {
+            color: #333;
+        }
+
+        .card .actions {
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        .card .client-types {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        .card .client-types span {
+            display: inline-block;
+            background-color: #e0e7ff;
+            color: #2563eb;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .search-bar input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+
+        /* Modals */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #2563eb;
+            border-bottom: 1px solid #e0e7ff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        /* Relatórios */
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .report-card {
+            background-color: #e0e7ff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #2563eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .report-card p {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: #6b7280;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            nav.sidebar {
+                width: 100%;
+                padding: 10px 0;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            }
+
+            nav.sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav.sidebar ul li {
+                margin: 0 5px;
+            }
+
+            nav.sidebar ul li a {
+                padding: 10px 15px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+
+            nav.sidebar ul li a.active {
+                border-bottom-color: #2563eb;
+                border-left-color: transparent;
+            }
+
+            main.content {
+                padding: 15px;
+            }
+
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Autogallery</h1>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#" data-section="estoque">Estoque</a></li>
+                <li><a href="#" data-section="clientes">Clientes</a></li>
+                <li><a href="#" data-section="cadastrar-veiculo">Cadastrar Veículo</a></li>
+                <li><a href="#" data-section="registrar-compra">Registrar Compra</a></li>
+                <li><a href="#" data-section="registrar-venda">Registrar Venda</a></li>
+                <li><a href="#" data-section="consignacoes">Consignações</a></li>
+                <li><a href="#" data-section="intermediacoes">Intermediações</a></li>
+                <li><a href="#" data-section="relatorios">Relatórios</a></li>
+                <li><a href="#" data-section="arquivo-morto">📁 Arquivo Morto</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <!-- Estoque Section -->
+            <section id="estoque" class="section">
+                <h2>Estoque de Veículos</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchVeiculoInput" placeholder="🔍 Buscar veículo por marca, modelo ou placa..." onkeyup="searchVeiculos()">
+                </div>
+                <div id="veiculosList" class="card-container">
+                    <!-- Vehicle cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Clientes Section -->
+            <section id="clientes" class="section hidden">
+                <h2>Clientes</h2>
+                <button class="btn" onclick="openModal('addClienteModal')">Adicionar Cliente</button>
+                <div class="search-bar" style="margin-top: 20px;">
+                    <input type="text" id="searchClienteInput" placeholder="🔍 Buscar cliente por nome, CPF ou telefone..." onkeyup="searchClientes()">
+                </div>
+                <div id="clientesList" class="card-container">
+                    <!-- Client cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Cadastrar Veículo Section -->
+            <section id="cadastrar-veiculo" class="section hidden">
+                <h2>Cadastrar Novo Veículo</h2>
+                <form id="addVeiculoForm">
+                    <div class="form-group">
+                        <label for="veiculoMarca">Marca:</label>
+                        <input type="text" id="veiculoMarca" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoModelo">Modelo:</label>
+                        <input type="text" id="veiculoModelo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoAno">Ano:</label>
+                        <input type="number" id="veiculoAno" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoCor">Cor:</label>
+                        <input type="text" id="veiculoCor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoPlaca">Placa:</label>
+                        <input type="text" id="veiculoPlaca" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoPrecoCompra">Preço de Compra:</label>
+                        <input type="number" id="veiculoPrecoCompra" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="veiculoPrecoVenda">Preço de Venda:</label>
+                        <input type="number" id="veiculoPrecoVenda" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn">Cadastrar Veículo</button>
+                </form>
+            </section>
+
+            <!-- Registrar Compra Section -->
+            <section id="registrar-compra" class="section hidden">
+                <h2>Registrar Compra</h2>
+                <form id="registerCompraForm">
+                    <div class="form-group">
+                        <label for="compraFornecedor">Fornecedor/Vendedor:</label>
+                        <select id="compraFornecedor" required>
+                            <option value="">Selecione um fornecedor/vendedor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="compraVeiculo">Veículo:</label>
+                        <select id="compraVeiculo" required>
+                            <option value="">Selecione um veículo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="compraData">Data da Compra:</label>
+                        <input type="date" id="compraData" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="compraValor">Valor da Compra:</label>
+                        <input type="number" id="compraValor" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn">Registrar Compra</button>
+                </form>
+                <div id="comprasList" class="card-container" style="margin-top: 30px;">
+                    <!-- Purchase cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Registrar Venda Section -->
+            <section id="registrar-venda" class="section hidden">
+                <h2>Registrar Venda</h2>
+                <form id="registerVendaForm">
+                    <div class="form-group">
+                        <label for="vendaCliente">Cliente:</label>
+                        <select id="vendaCliente" required>
+                            <option value="">Selecione um cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vendaVeiculo">Veículo:</label>
+                        <select id="vendaVeiculo" required>
+                            <option value="">Selecione um veículo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vendaData">Data da Venda:</label>
+                        <input type="date" id="vendaData" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vendaValor">Valor da Venda:</label>
+                        <input type="number" id="vendaValor" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn">Registrar Venda</button>
+                </form>
+                <div id="vendasList" class="card-container" style="margin-top: 30px;">
+                    <!-- Sale cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Consignações Section -->
+            <section id="consignacoes" class="section hidden">
+                <h2>Consignações</h2>
+                <button class="btn" onclick="openModal('addConsignacaoModal')">Adicionar Consignação</button>
+                <div id="consignacoesList" class="card-container" style="margin-top: 20px;">
+                    <!-- Consignment cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Intermediações Section -->
+            <section id="intermediacoes" class="section hidden">
+                <h2>Intermediações</h2>
+                <button class="btn" onclick="openModal('addIntermediacaoModal')">Adicionar Intermediação</button>
+                <div id="intermediacoesList" class="card-container" style="margin-top: 20px;">
+                    <!-- Intermediation cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Relatórios Section -->
+            <section id="relatorios" class="section hidden">
+                <h2>Relatórios</h2>
+                <div class="report-summary">
+                    <div class="report-card">
+                        <h3>Veículos em Estoque</h3>
+                        <p id="totalVeiculosEstoque">0</p>
+                    </div>
+                    <div class="report-card">
+                        <h3>Total de Clientes</h3>
+                        <p id="totalClientes">0</p>
+                    </div>
+                    <div class="report-card">
+                        <h3>Vendas Realizadas</h3>
+                        <p id="totalVendasRealizadas">0</p>
+                    </div>
+                    <div class="report-card">
+                        <h3>Receita Total</h3>
+                        <p id="receitaTotal">R$ 0,00</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arquivo Morto Section -->
+            <section id="arquivo-morto" class="section hidden">
+                <h2>📁 Arquivo Morto</h2>
+                <h3>Clientes Deletados</h3>
+                <div id="clientesArquivoMortoList" class="card-container"></div>
+                <h3>Veículos Deletados</h3>
+                <div id="veiculosArquivoMortoList" class="card-container"></div>
+                <h3>Consignações Deletadas</h3>
+                <div id="consignacoesArquivoMortoList" class="card-container"></div>
+                <h3>Intermediações Deletadas</h3>
+                <div id="intermediacoesArquivoMortoList" class="card-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Add Cliente Modal -->
+    <div id="addClienteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('addClienteModal')">&times;</span>
+            <h3>Adicionar Novo Cliente</h3>
+            <form id="addClienteForm">
+                <div class="form-group">
+                    <label for="clienteNome">Nome:</label>
+                    <input type="text" id="clienteNome" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteCPF">CPF:</label>
+                    <input type="text" id="clienteCPF" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteTelefone">Telefone:</label>
+                    <input type="text" id="clienteTelefone" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteEmail">Email:</label>
+                    <input type="email" id="clienteEmail">
+                </div>
+                <div class="form-group">
+                    <label for="clienteEndereco">Endereço:</label>
+                    <input type="text" id="clienteEndereco">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Cliente:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="clienteTipo" value="Comprador"> Comprador</label>
+                        <label><input type="checkbox" name="clienteTipo" value="Vendedor"> Vendedor</label>
+                        <label><input type="checkbox" name="clienteTipo" value="Fornecedor"> Fornecedor</label>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Adicionar Cliente</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addClienteModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Cliente Modal -->
+    <div id="editClienteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('editClienteModal')">&times;</span>
+            <h3>Editar Cliente</h3>
+            <form id="editClienteForm">
+                <input type="hidden" id="editClienteId">
+                <div class="form-group">
+                    <label for="editClienteNome">Nome:</label>
+                    <input type="text" id="editClienteNome" required>
+                </div>
+                <div class="form-group">
+                    <label for="editClienteCPF">CPF:</label>
+                    <input type="text" id="editClienteCPF" required>
+                </div>
+                <div class="form-group">
+                    <label for="editClienteTelefone">Telefone:</label>
+                    <input type="text" id="editClienteTelefone" required>
+                </div>
+                <div class="form-group">
+                    <label for="editClienteEmail">Email:</label>
+                    <input type="email" id="editClienteEmail">
+                </div>
+                <div class="form-group">
+                    <label for="editClienteEndereco">Endereço:</label>
+                    <input type="text" id="editClienteEndereco">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Cliente:</label>
+                    <div class="checkbox-group" id="editClienteTipoCheckboxes">
+                        <label><input type="checkbox" name="editClienteTipo" value="Comprador"> Comprador</label>
+                        <label><input type="checkbox" name="editClienteTipo" value="Vendedor"> Vendedor</label>
+                        <label><input type="checkbox" name="editClienteTipo" value="Fornecedor"> Fornecedor</label>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editClienteModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Veiculo Modal -->
+    <div id="editVeiculoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('editVeiculoModal')">&times;</span>
+            <h3>Editar Veículo</h3>
+            <form id="editVeiculoForm">
+                <input type="hidden" id="editVeiculoId">
+                <div class="form-group">
+                    <label for="editVeiculoMarca">Marca:</label>
+                    <input type="text" id="editVeiculoMarca" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoModelo">Modelo:</label>
+                    <input type="text" id="editVeiculoModelo" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoAno">Ano:</label>
+                    <input type="number" id="editVeiculoAno" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoCor">Cor:</label>
+                    <input type="text" id="editVeiculoCor" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoPlaca">Placa:</label>
+                    <input type="text" id="editVeiculoPlaca" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoPrecoCompra">Preço de Compra:</label>
+                    <input type="number" id="editVeiculoPrecoCompra" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoPrecoVenda">Preço de Venda:</label>
+                    <input type="number" id="editVeiculoPrecoVenda" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editVeiculoStatus">Status:</label>
+                    <select id="editVeiculoStatus" required>
+                        <option value="Disponível">Disponível</option>
+                        <option value="Vendido">Vendido</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editVeiculoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Consignacao Modal -->
+    <div id="addConsignacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('addConsignacaoModal')">&times;</span>
+            <h3>Adicionar Nova Consignação</h3>
+            <form id="addConsignacaoForm">
+                <div class="form-group">
+                    <label for="consignacaoCliente">Cliente:</label>
+                    <select id="consignacaoCliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="consignacaoVeiculo">Veículo:</label>
+                    <select id="consignacaoVeiculo" required>
+                        <option value="">Selecione um veículo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="consignacaoDataInicio">Data Início:</label>
+                    <input type="date" id="consignacaoDataInicio" required>
+                </div>
+                <div class="form-group">
+                    <label for="consignacaoPrazo">Prazo (dias):</label>
+                    <input type="number" id="consignacaoPrazo" required>
+                </div>
+                <div class="form-group">
+                    <label for="consignacaoComissao">Comissão (%):</label>
+                    <input type="number" id="consignacaoComissao" step="0.01" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Adicionar Consignação</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addConsignacaoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Consignacao Modal -->
+    <div id="editConsignacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('editConsignacaoModal')">&times;</span>
+            <h3>Editar Consignação</h3>
+            <form id="editConsignacaoForm">
+                <input type="hidden" id="editConsignacaoId">
+                <div class="form-group">
+                    <label for="editConsignacaoCliente">Cliente:</label>
+                    <select id="editConsignacaoCliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editConsignacaoVeiculo">Veículo:</label>
+                    <select id="editConsignacaoVeiculo" required>
+                        <option value="">Selecione um veículo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editConsignacaoDataInicio">Data Início:</label>
+                    <input type="date" id="editConsignacaoDataInicio" required>
+                </div>
+                <div class="form-group">
+                    <label for="editConsignacaoPrazo">Prazo (dias):</label>
+                    <input type="number" id="editConsignacaoPrazo" required>
+                </div>
+                <div class="form-group">
+                    <label for="editConsignacaoComissao">Comissão (%):</label>
+                    <input type="number" id="editConsignacaoComissao" step="0.01" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editConsignacaoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Intermediacao Modal -->
+    <div id="addIntermediacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('addIntermediacaoModal')">&times;</span>
+            <h3>Adicionar Nova Intermediação</h3>
+            <form id="addIntermediacaoForm">
+                <div class="form-group">
+                    <label for="intermediacaoCliente">Cliente Solicitante:</label>
+                    <select id="intermediacaoCliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="intermediacaoDescricao">Descrição do Veículo Buscado:</label>
+                    <textarea id="intermediacaoDescricao" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="intermediacaoStatus">Status:</label>
+                    <select id="intermediacaoStatus" required>
+                        <option value="Em Busca">Em Busca</option>
+                        <option value="Encontrado">Encontrado</option>
+                        <option value="Concluído">Concluído</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Adicionar Intermediação</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addIntermediacaoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Intermediacao Modal -->
+    <div id="editIntermediacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('editIntermediacaoModal')">&times;</span>
+            <h3>Editar Intermediação</h3>
+            <form id="editIntermediacaoForm">
+                <input type="hidden" id="editIntermediacaoId">
+                <div class="form-group">
+                    <label for="editIntermediacaoCliente">Cliente Solicitante:</label>
+                    <select id="editIntermediacaoCliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editIntermediacaoDescricao">Descrição do Veículo Buscado:</label>
+                    <textarea id="editIntermediacaoDescricao" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editIntermediacaoStatus">Status:</label>
+                    <select id="editIntermediacaoStatus" required>
+                        <option value="Em Busca">Em Busca</option>
+                        <option value="Encontrado">Encontrado</option>
+                        <option value="Concluído">Concluído</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editIntermediacaoModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#d97706',
+        // Global Data Storage
+        let data = {
+            clientes: [],
+            veiculos: [],
+            compras: [],
+            vendas: [],
+            consignacoes: [],
+            intermediacoes: []
+        };
+
+        // --- Utility Functions ---
+
+        // Generates a unique ID
+        function generateId() {
+            return '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Loads data from localStorage
+        function loadData() {
+            const storedData = localStorage.getItem('autogalleryData');
+            if (storedData) {
+                data = JSON.parse(storedData);
+            } else {
+                // Initial sample data if localStorage is empty
+                data.clientes = [
+                    { id: generateId(), nome: 'João Silva', cpf: '111.222.333-44', telefone: '11987654321', email: 'joao@example.com', endereco: 'Rua A, 123', tipos: ['Comprador'], typeHistory: [{ type: 'Comprador', date: '2023-01-10' }] },
+                    { id: generateId(), nome: 'Maria Souza', cpf: '555.666.777-88', telefone: '11912345678', email: 'maria@example.com', endereco: 'Av B, 456', tipos: ['Vendedor', 'Fornecedor'], typeHistory: [{ type: 'Vendedor', date: '2023-02-15' }, { type: 'Fornecedor', date: '2023-03-01' }] },
+                    { id: generateId(), nome: 'Concessionária ABC', cpf: '00.111.222/0001-33', telefone: '1130001000', email: 'contato@abc.com', endereco: 'Rua C, 789', tipos: ['Fornecedor'], typeHistory: [{ type: 'Fornecedor', date: '2023-04-01' }] }
+                ];
+                data.veiculos = [
+                    { id: generateId(), marca: 'Toyota', modelo: 'Corolla', ano: 2020, cor: 'Prata', placa: 'ABC1234', precoCompra: 75000, precoVenda: 85000, status: 'Disponível' },
+                    { id: generateId(), marca: 'Honda', modelo: 'Civic', ano: 2019, cor: 'Preto', placa: 'DEF5678', precoCompra: 68000, precoVenda: 78000, status: 'Disponível' },
+                    { id: generateId(), marca: 'Volkswagen', modelo: 'Gol', ano: 2018, cor: 'Branco', placa: 'GHI9012', precoCompra: 35000, precoVenda: 42000, status: 'Vendido' }
+                ];
+                data.compras = [
+                    { id: generateId(), fornecedorId: data.clientes[1].id, veiculoId: data.veiculos[2].id, data: '2023-05-10', valor: 35000 }
+                ];
+                data.vendas = [
+                    { id: generateId(), clienteId: data.clientes[0].id, veiculoId: data.veiculos[2].id, data: '2023-06-01', valor: 42000 }
+                ];
+                data.consignacoes = [
+                    { id: generateId(), clienteId: data.clientes[0].id, veiculoId: data.veiculos[0].id, dataInicio: '2023-07-01', prazo: 90, comissao: 5 }
+                ];
+                data.intermediacoes = [
+                    { id: generateId(), clienteId: data.clientes[0].id, descricao: 'SUV 7 lugares, até 150k', status: 'Em Busca' }
+                ];
+                saveData();
+            }
+        }
+
+        // Saves data to localStorage
+        function saveData() {
+            localStorage.setItem('autogalleryData', JSON.stringify(data));
+        }
+
+        // Formats date to dd/mm/yyyy
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}/${year}`;
+        }
+
+        // Updates client type history
+        function updateClientType(clientId, type) {
+            const client = data.clientes.find(c => c.id === clientId);
+            if (client && !client.deleted) {
+                if (!client.tipos.includes(type)) {
+                    client.tipos.push(type);
+                }
+                if (!client.typeHistory) {
+                    client.typeHistory = [];
+                }
+                // Check if this type for this date already exists to avoid duplicates
+                const today = new Date().toISOString().split('T')[0];
+                const exists = client.typeHistory.some(entry => entry.type === type && entry.date === today);
+                if (!exists) {
+                    client.typeHistory.push({ type: type, date: today });
+                }
+                saveData();
+                renderClientes(); // Re-render to show updated types
+            }
+        }
+
+        // --- Modal Functions ---
+
+        function openModal(modalId, itemId = null, itemType = null) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'flex'; // Use flex to center
+
+            if (itemId && itemType) {
+                // Populate form for editing
+                if (itemType === 'cliente') {
+                    const item = data.clientes.find(c => c.id === itemId);
+                    if (item) {
+                        document.getElementById('editClienteId').value = item.id;
+                        document.getElementById('editClienteNome').value = item.nome;
+                        document.getElementById('editClienteCPF').value = item.cpf;
+                        document.getElementById('editClienteTelefone').value = item.telefone;
+                        document.getElementById('editClienteEmail').value = item.email;
+                        document.getElementById('editClienteEndereco').value = item.endereco;
+                        const checkboxes = document.querySelectorAll('#editClienteTipoCheckboxes input[type="checkbox"]');
+                        checkboxes.forEach(cb => {
+                            cb.checked = item.tipos.includes(cb.value);
+                        });
+                    }
+                } else if (itemType === 'veiculo') {
+                    const item = data.veiculos.find(v => v.id === itemId);
+                    if (item) {
+                        document.getElementById('editVeiculoId').value = item.id;
+                        document.getElementById('editVeiculoMarca').value = item.marca;
+                        document.getElementById('editVeiculoModelo').value = item.modelo;
+                        document.getElementById('editVeiculoAno').value = item.ano;
+                        document.getElementById('editVeiculoCor').value = item.cor;
+                        document.getElementById('editVeiculoPlaca').value = item.placa;
+                        document.getElementById('editVeiculoPrecoCompra').value = item.precoCompra;
+                        document.getElementById('editVeiculoPrecoVenda').value = item.precoVenda;
+                        document.getElementById('editVeiculoStatus').value = item.status;
+                    }
+                } else if (itemType === 'consignacao') {
+                    const item = data.consignacoes.find(c => c.id === itemId);
+                    if (item) {
+                        document.getElementById('editConsignacaoId').value = item.id;
+                        populateDropdowns('editConsignacaoCliente', data.clientes.filter(c => !c.deleted), item.clienteId);
+                        populateDropdowns('editConsignacaoVeiculo', data.veiculos.filter(v => !v.deleted), item.veiculoId);
+                        document.getElementById('editConsignacaoDataInicio').value = item.dataInicio;
+                        document.getElementById('editConsignacaoPrazo').value = item.prazo;
+                        document.getElementById('editConsignacaoComissao').value = item.comissao;
+                    }
+                } else if (itemType === 'intermediacao') {
+                    const item = data.intermediacoes.find(i => i.id === itemId);
+                    if (item) {
+                        document.getElementById('editIntermediacaoId').value = item.id;
+                        populateDropdowns('editIntermediacaoCliente', data.clientes.filter(c => !c.deleted), item.clienteId);
+                        document.getElementById('editIntermediacaoDescricao').value = item.descricao;
+                        document.getElementById('editIntermediacaoStatus').value = item.status;
                     }
                 }
             }
         }
-    </script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; }
-        .hidden { display: none; }
-    </style>
-</head>
-<body class="bg-gray-50">
 
-    <!-- Header -->
-    <header class="bg-primary text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center space-x-3">
-                <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                </svg>
-                <div>
-                    <h1 class="text-2xl font-bold">Autogallery</h1>
-                    <p class="text-xs text-gray-300">Sistema de Gestão</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg min-h-screen">
-            <nav class="p-4 space-y-2">
-                <button onclick="showPage('estoque')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📦 Estoque</button>
-                <button onclick="showPage('clientes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">👥 Clientes</button>
-                <button onclick="showPage('cadastro-veiculo')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">🚗 Cadastrar Veículo</button>
-                <button onclick="showPage('compras')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">🛒 Compras</button>
-                <button onclick="showPage('vendas')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📈 Vendas</button>
-                <button onclick="showPage('consignacoes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📄 Consignações</button>
-                <button onclick="showPage('intermediacoes')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">⚙️ Intermediações</button>
-                <button onclick="showPage('relatorios')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">📊 Relatórios</button>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-8">
-            
-            <!-- PÁGINA: ESTOQUE -->
-            <div id="page-estoque" class="page">
-                <h1 class="text-3xl font-bold text-gray-800 mb-6">Estoque de Veículos</h1>
-                <div class="bg-gradient-to-r from-primary to-blue-900 text-white rounded-lg p-6 mb-6">
-                    <p class="text-sm opacity-90">Valor Total em Estoque</p>
-                    <p class="text-3xl font-bold mt-1" id="valor-estoque">R$ 0,00</p>
-                </div>
-                <div id="lista-estoque" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- PÁGINA: CLIENTES -->
-            <div id="page-clientes" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Clientes</h1>
-                    <button onclick="showModal('modal-cliente')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Novo Cliente</button>
-                </div>
-                <div id="lista-clientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- PÁGINA: CADASTRO VEÍCULO -->
-            <div id="page-cadastro-veiculo" class="page hidden">
-                <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-6">Cadastrar Veículo</h1>
-                    <form id="form-veiculo" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="text" id="v-marca" placeholder="Marca" required class="px-4 py-2 border rounded-lg">
-                            <input type="text" id="v-modelo" placeholder="Modelo" required class="px-4 py-2 border rounded-lg">
-                        </div>
-                        <input type="text" id="v-versao" placeholder="Versão (opcional)" class="w-full px-4 py-2 border rounded-lg">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="number" id="v-ano-fab" placeholder="Ano Fabricação" required class="px-4 py-2 border rounded-lg">
-                            <input type="number" id="v-ano-mod" placeholder="Ano Modelo" required class="px-4 py-2 border rounded-lg">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="text" id="v-cor" placeholder="Cor" required class="px-4 py-2 border rounded-lg">
-                            <input type="text" id="v-placa" placeholder="Placa" required class="px-4 py-2 border rounded-lg">
-                        </div>
-                        <input type="number" id="v-km" placeholder="Quilometragem" required class="w-full px-4 py-2 border rounded-lg">
-                        <div class="grid grid-cols-2 gap-4">
-                            <select id="v-combustivel" required class="px-4 py-2 border rounded-lg">
-                                <option value="">Combustível</option>
-                                <option value="flex">Flex</option>
-                                <option value="gasolina">Gasolina</option>
-                                <option value="diesel">Diesel</option>
-                                <option value="eletrico">Elétrico</option>
-                            </select>
-                            <select id="v-cambio" required class="px-4 py-2 border rounded-lg">
-                                <option value="">Câmbio</option>
-                                <option value="manual">Manual</option>
-                                <option value="automatico">Automático</option>
-                            </select>
-                        </div>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" id="v-blindado" class="w-4 h-4">
-                            <span>Veículo Blindado</span>
-                        </label>
-                        <textarea id="v-obs" placeholder="Observações" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
-                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-900">Cadastrar Veículo</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- PÁGINA: COMPRAS -->
-            <div id="page-compras" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Compras</h1>
-                    <button onclick="showModal('modal-compra')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Compra</button>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <table class="w-full" id="tabela-compras">
-                        <thead>
-                            <tr class="border-b">
-                                <th class="text-left py-3">Data</th>
-                                <th class="text-left py-3">Veículo</th>
-                                <th class="text-left py-3">Fornecedor</th>
-                                <th class="text-left py-3">Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-compras"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PÁGINA: VENDAS -->
-            <div id="page-vendas" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Vendas</h1>
-                    <button onclick="showModal('modal-venda')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Venda</button>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <table class="w-full" id="tabela-vendas">
-                        <thead>
-                            <tr class="border-b">
-                                <th class="text-left py-3">Data</th>
-                                <th class="text-left py-3">Veículo</th>
-                                <th class="text-left py-3">Cliente</th>
-                                <th class="text-left py-3">Valor</th>
-                                <th class="text-left py-3">Lucro</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-vendas"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PÁGINA: CONSIGNAÇÕES -->
-            <div id="page-consignacoes" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Consignações</h1>
-                    <button onclick="showModal('modal-consignacao')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Consignação</button>
-                </div>
-                <div id="lista-consignacoes" class="space-y-4"></div>
-            </div>
-
-            <!-- PÁGINA: INTERMEDIAÇÕES -->
-            <div id="page-intermediacoes" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Intermediações</h1>
-                    <button onclick="showModal('modal-intermediacao')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-900">➕ Nova Intermediação</button>
-                </div>
-                <div id="lista-intermediacoes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- PÁGINA: RELATÓRIOS -->
-            <div id="page-relatorios" class="page hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Relatórios Financeiros</h1>
-                    <div class="space-x-2">
-                        <button onclick="exportarDados()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-yellow-700">⬇️ Exportar</button>
-                        <button onclick="importarDados()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-yellow-700">⬆️ Importar</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                    <div class="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-lg p-6">
-                        <p class="text-sm opacity-90">Receita Total</p>
-                        <p class="text-2xl font-bold mt-1" id="rel-receita">R$ 0,00</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-primary to-blue-900 text-white rounded-lg p-6">
-                        <p class="text-sm opacity-90">Lucro Bruto</p>
-                        <p class="text-2xl font-bold mt-1" id="rel-lucro">R$ 0,00</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-secondary to-yellow-700 text-white rounded-lg p-6">
-                        <p class="text-sm opacity-90">Margem Média</p>
-                        <p class="text-2xl font-bold mt-1" id="rel-margem">0%</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-lg p-6">
-                        <p class="text-sm opacity-90">Valor em Estoque</p>
-                        <p class="text-2xl font-bold mt-1" id="rel-estoque">R$ 0,00</p>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- MODAL: CLIENTE -->
-    <div id="modal-cliente" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-            <h2 class="text-2xl font-bold mb-4">Novo Cliente</h2>
-            <form id="form-cliente" class="space-y-4">
-                <input type="text" id="c-nome" placeholder="Nome Completo" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="text" id="c-cpf" placeholder="CPF" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="text" id="c-telefone" placeholder="Telefone" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="email" id="c-email" placeholder="Email" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="text" id="c-endereco" placeholder="Endereço" required class="w-full px-4 py-2 border rounded-lg">
-                <select id="c-tipo" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Tipo</option>
-                    <option value="comprador">Comprador</option>
-                    <option value="fornecedor">Fornecedor</option>
-                </select>
-                <div class="flex space-x-3">
-                    <button type="button" onclick="hideModal('modal-cliente')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Cadastrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: COMPRA -->
-    <div id="modal-compra" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-            <h2 class="text-2xl font-bold mb-4">Nova Compra</h2>
-            <form id="form-compra" class="space-y-4">
-                <select id="comp-veiculo" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Veículo</option>
-                </select>
-                <select id="comp-fornecedor" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Fornecedor</option>
-                </select>
-                <input type="date" id="comp-data" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="comp-valor" placeholder="Valor Pago" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
-                <div class="flex space-x-3">
-                    <button type="button" onclick="hideModal('modal-compra')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: VENDA -->
-    <div id="modal-venda" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-            <h2 class="text-2xl font-bold mb-4">Nova Venda</h2>
-            <form id="form-venda" class="space-y-4">
-                <select id="vend-veiculo" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Veículo</option>
-                </select>
-                <select id="vend-cliente" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Cliente</option>
-                </select>
-                <input type="date" id="vend-data" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="vend-valor" placeholder="Valor de Venda" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
-                <div class="flex space-x-3">
-                    <button type="button" onclick="hideModal('modal-venda')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: CONSIGNAÇÃO -->
-    <div id="modal-consignacao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-            <h2 class="text-2xl font-bold mb-4">Nova Consignação</h2>
-            <form id="form-consignacao" class="space-y-4">
-                <select id="cons-veiculo" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Veículo</option>
-                </select>
-                <select id="cons-proprietario" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Proprietário</option>
-                </select>
-                <input type="date" id="cons-data" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="cons-prazo" placeholder="Prazo (dias)" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="cons-percentual" placeholder="Percentual da Loja (%)" step="0.1" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="cons-valor-min" placeholder="Valor Mínimo" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
-                <div class="flex space-x-3">
-                    <button type="button" onclick="hideModal('modal-consignacao')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: INTERMEDIAÇÃO -->
-    <div id="modal-intermediacao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-            <h2 class="text-2xl font-bold mb-4">Nova Intermediação</h2>
-            <form id="form-intermediacao" class="space-y-4">
-                <select id="int-cliente" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="">Selecione o Cliente</option>
-                </select>
-                <input type="text" id="int-veiculo" placeholder="Veículo Desejado" required class="w-full px-4 py-2 border rounded-lg">
-                <textarea id="int-espec" placeholder="Especificações" rows="3" required class="w-full px-4 py-2 border rounded-lg"></textarea>
-                <input type="number" id="int-orcamento" placeholder="Orçamento Máximo" step="0.01" required class="w-full px-4 py-2 border rounded-lg">
-                <input type="number" id="int-comissao" placeholder="Valor da Comissão (opcional)" step="0.01" class="w-full px-4 py-2 border rounded-lg">
-                <div class="flex space-x-3">
-                    <button type="button" onclick="hideModal('modal-intermediacao')" class="flex-1 bg-gray-300 py-2 rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Registrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // DADOS
-        let clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
-        let veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
-        let compras = JSON.parse(localStorage.getItem('compras') || '[]');
-        let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
-        let consignacoes = JSON.parse(localStorage.getItem('consignacoes') || '[]');
-        let intermediacoes = JSON.parse(localStorage.getItem('intermediacoes') || '[]');
-
-        // NAVEGAÇÃO
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.getElementById('page-' + pageId).classList.remove('hidden');
-            renderPage(pageId);
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+            // Reset forms when closing modal
+            const form = modal.querySelector('form');
+            if (form) form.reset();
         }
 
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-            document.getElementById(modalId).classList.add('flex');
-            preencherSelects();
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                const form = event.target.querySelector('form');
+                if (form) form.reset();
+            }
         }
 
-        function hideModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.getElementById(modalId).classList.remove('flex');
-        }
-
-        // RENDER
-        function renderPage(pageId) {
-            if (pageId === 'estoque') renderEstoque();
-            if (pageId === 'clientes') renderClientes();
-            if (pageId === 'compras') renderCompras();
-            if (pageId === 'vendas') renderVendas();
-            if (pageId === 'consignacoes') renderConsignacoes();
-            if (pageId === 'intermediacoes') renderIntermediacoes();
-            if (pageId === 'relatorios') renderRelatorios();
-        }
-
-        function renderEstoque() {
-            const lista = document.getElementById('lista-estoque');
-            const valorTotal = veiculos.filter(v => v.status === 'disponivel').reduce((acc, v) => {
-                const compra = compras.find(c => c.veiculoId === v.id);
-                return acc + (compra?.valor || 0);
-            }, 0);
-            
-            document.getElementById('valor-estoque').textContent = formatMoney(valorTotal);
-            
-            lista.innerHTML = veiculos.map(v => `
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex justify-between mb-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${v.status === 'disponivel' ? 'bg-green-500' : 'bg-gray-500'} text-white">
-                            ${v.status === 'disponivel' ? 'Disponível' : 'Vendido'}
-                        </span>
-                        ${v.blindado ? '<span class="px-3 py-1 rounded-full text-xs font-semibold bg-secondary text-white">Blindado</span>' : ''}
-                    </div>
-                    <div class="bg-gray-200 rounded-lg h-48 flex items-center justify-center mb-4">
-                        <span class="text-6xl">🚗</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">${v.marca} ${v.modelo}</h3>
-                    <p class="text-sm text-gray-600">Ano: ${v.anoFabricacao}/${v.anoModelo}</p>
-                    <p class="text-sm text-gray-600">Cor: ${v.cor}</p>
-                    <p class="text-sm text-gray-600">KM: ${v.km.toLocaleString('pt-BR')}</p>
-                    <p class="text-sm text-gray-600">Placa: ${v.placa}</p>
-                </div>
-            `).join('');
-        }
+        // --- Render Functions ---
 
         function renderClientes() {
-            const lista = document.getElementById('lista-clientes');
-            lista.innerHTML = clientes.map(c => `
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold ${c.tipo === 'comprador' ? 'bg-green-500' : 'bg-secondary'} text-white">
-                        ${c.tipo === 'comprador' ? 'Comprador' : 'Fornecedor'}
-                    </span>
-                    <h3 class="text-xl font-bold mt-3 mb-2">${c.nome}</h3>
-                    <p class="text-sm text-gray-600">CPF: ${c.cpf}</p>
-                    <p class="text-sm text-gray-600">Telefone: ${c.telefone}</p>
-                    <p class="text-sm text-gray-600">Email: ${c.email}</p>
-                </div>
-            `).join('');
+            const clientesList = document.getElementById('clientesList');
+            clientesList.innerHTML = '';
+            const searchTerm = document.getElementById('searchClienteInput').value.toLowerCase();
+
+            data.clientes.filter(c => !c.deleted).forEach(cliente => {
+                const match = searchTerm === '' ||
+                              cliente.nome.toLowerCase().includes(searchTerm) ||
+                              cliente.cpf.toLowerCase().includes(searchTerm) ||
+                              cliente.telefone.toLowerCase().includes(searchTerm);
+
+                if (match) {
+                    const clientTypesHtml = cliente.typeHistory ? cliente.typeHistory.map(th => `<span>${th.type} (desde ${formatDate(th.date)})</span>`).join('') : '';
+                    clientesList.innerHTML += `
+                        <div class="card">
+                            <h3>${cliente.nome}</h3>
+                            <p><strong>CPF:</strong> ${cliente.cpf}</p>
+                            <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                            <p><strong>Email:</strong> ${cliente.email || 'N/A'}</p>
+                            <p><strong>Endereço:</strong> ${cliente.endereco || 'N/A'}</p>
+                            <div class="client-types">${clientTypesHtml}</div>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="openModal('editClienteModal', '${cliente.id}', 'cliente')">✏️ Editar</button>
+                                <button class="btn btn-delete" onclick="deleteItem('${cliente.id}', 'clientes')">🗑️ Deletar</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function renderVeiculos() {
+            const veiculosList = document.getElementById('veiculosList');
+            veiculosList.innerHTML = '';
+            const searchTerm = document.getElementById('searchVeiculoInput').value.toLowerCase();
+
+            data.veiculos.filter(v => !v.deleted).forEach(veiculo => {
+                const match = searchTerm === '' ||
+                              veiculo.marca.toLowerCase().includes(searchTerm) ||
+                              veiculo.modelo.toLowerCase().includes(searchTerm) ||
+                              veiculo.placa.toLowerCase().includes(searchTerm);
+
+                if (match) {
+                    veiculosList.innerHTML += `
+                        <div class="card">
+                            <h3>${veiculo.marca} ${veiculo.modelo} (${veiculo.ano})</h3>
+                            <p><strong>Cor:</strong> ${veiculo.cor}</p>
+                            <p><strong>Placa:</strong> ${veiculo.placa}</p>
+                            <p><strong>Preço Compra:</strong> R$ ${veiculo.precoCompra.toFixed(2)}</p>
+                            <p><strong>Preço Venda:</strong> R$ ${veiculo.precoVenda.toFixed(2)}</p>
+                            <p><strong>Status:</strong> ${veiculo.status}</p>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="openModal('editVeiculoModal', '${veiculo.id}', 'veiculo')">✏️ Editar</button>
+                                <button class="btn btn-delete" onclick="deleteItem('${veiculo.id}', 'veiculos')">🗑️ Deletar</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
         }
 
         function renderCompras() {
-            const lista = document.getElementById('lista-compras');
-            lista.innerHTML = compras.map(c => {
-                const veiculo = veiculos.find(v => v.id === c.veiculoId);
-                const fornecedor = clientes.find(cl => cl.id === c.fornecedorId);
-                return `
-                    <tr class="border-b">
-                        <td class="py-3">${new Date(c.data).toLocaleDateString('pt-BR')}</td>
-                        <td class="py-3">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</td>
-                        <td class="py-3">${fornecedor ? fornecedor.nome : 'N/A'}</td>
-                        <td class="py-3 font-semibold text-primary">${formatMoney(c.valor)}</td>
-                    </tr>
+            const comprasList = document.getElementById('comprasList');
+            comprasList.innerHTML = '';
+            data.compras.forEach(compra => {
+                const fornecedor = data.clientes.find(c => c.id === compra.fornecedorId);
+                const veiculo = data.veiculos.find(v => v.id === compra.veiculoId);
+                comprasList.innerHTML += `
+                    <div class="card">
+                        <h3>Compra de Veículo</h3>
+                        <p><strong>Fornecedor:</strong> ${fornecedor ? fornecedor.nome : 'N/A'}</p>
+                        <p><strong>Veículo:</strong> ${veiculo ? `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})` : 'N/A'}</p>
+                        <p><strong>Data:</strong> ${formatDate(compra.data)}</p>
+                        <p><strong>Valor:</strong> R$ ${compra.valor.toFixed(2)}</p>
+                    </div>
                 `;
-            }).join('');
+            });
         }
 
         function renderVendas() {
-            const lista = document.getElementById('lista-vendas');
-            lista.innerHTML = vendas.map(v => {
-                const veiculo = veiculos.find(ve => ve.id === v.veiculoId);
-                const cliente = clientes.find(c => c.id === v.clienteId);
-                return `
-                    <tr class="border-b">
-                        <td class="py-3">${new Date(v.data).toLocaleDateString('pt-BR')}</td>
-                        <td class="py-3">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</td>
-                        <td class="py-3">${cliente ? cliente.nome : 'N/A'}</td>
-                        <td class="py-3 font-semibold text-primary">${formatMoney(v.valor)}</td>
-                        <td class="py-3 font-semibold text-green-600">${formatMoney(v.lucro || 0)}</td>
-                    </tr>
+            const vendasList = document.getElementById('vendasList');
+            vendasList.innerHTML = '';
+            data.vendas.forEach(venda => {
+                const cliente = data.clientes.find(c => c.id === venda.clienteId);
+                const veiculo = data.veiculos.find(v => v.id === venda.veiculoId);
+                vendasList.innerHTML += `
+                    <div class="card">
+                        <h3>Venda de Veículo</h3>
+                        <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p><strong>Veículo:</strong> ${veiculo ? `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})` : 'N/A'}</p>
+                        <p><strong>Data:</strong> ${formatDate(venda.data)}</p>
+                        <p><strong>Valor:</strong> R$ ${venda.valor.toFixed(2)}</p>
+                    </div>
                 `;
-            }).join('');
+            });
         }
 
         function renderConsignacoes() {
-            const lista = document.getElementById('lista-consignacoes');
-            lista.innerHTML = consignacoes.map(c => {
-                const veiculo = veiculos.find(v => v.id === c.veiculoId);
-                const proprietario = clientes.find(cl => cl.id === c.proprietarioId);
-                return `
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-xl font-bold mb-2">${veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'N/A'}</h3>
-                        <p class="text-sm text-gray-600">Proprietário: ${proprietario ? proprietario.nome : 'N/A'}</p>
-                        <p class="text-sm text-gray-600">Prazo: ${c.prazo} dias</p>
-                        <p class="text-sm text-gray-600">Percentual Loja: ${c.percentual}%</p>
-                        <p class="text-sm text-gray-600">Valor Mínimo: ${formatMoney(c.valorMinimo)}</p>
+            const consignacoesList = document.getElementById('consignacoesList');
+            consignacoesList.innerHTML = '';
+            data.consignacoes.filter(c => !c.deleted).forEach(consignacao => {
+                const cliente = data.clientes.find(c => c.id === consignacao.clienteId);
+                const veiculo = data.veiculos.find(v => v.id === consignacao.veiculoId);
+                consignacoesList.innerHTML += `
+                    <div class="card">
+                        <h3>Consignação</h3>
+                        <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p><strong>Veículo:</strong> ${veiculo ? `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})` : 'N/A'}</p>
+                        <p><strong>Data Início:</strong> ${formatDate(consignacao.dataInicio)}</p>
+                        <p><strong>Prazo:</strong> ${consignacao.prazo} dias</p>
+                        <p><strong>Comissão:</strong> ${consignacao.comissao}%</p>
+                        <div class="actions">
+                            <button class="btn btn-edit" onclick="openModal('editConsignacaoModal', '${consignacao.id}', 'consignacao')">✏️ Editar</button>
+                            <button class="btn btn-delete" onclick="deleteItem('${consignacao.id}', 'consignacoes')">🗑️ Deletar</button>
+                        </div>
                     </div>
                 `;
-            }).join('');
+            });
         }
 
         function renderIntermediacoes() {
-            const lista = document.getElementById('lista-intermediacoes');
-            lista.innerHTML = intermediacoes.map(i => {
-                const cliente = clientes.find(c => c.id === i.clienteId);
-                return `
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500 text-white">Em Busca</span>
-                        <h3 class="text-xl font-bold mt-3 mb-2">${i.veiculoDesejado}</h3>
-                        <p class="text-sm text-gray-600">Cliente: ${cliente ? cliente.nome : 'N/A'}</p>
-                        <p class="text-sm text-gray-600">Orçamento: ${formatMoney(i.orcamento)}</p>
-                        ${i.comissao ? `<p class="text-sm text-gray-600">Comissão: ${formatMoney(i.comissao)}</p>` : ''}
+            const intermediacoesList = document.getElementById('intermediacoesList');
+            intermediacoesList.innerHTML = '';
+            data.intermediacoes.filter(i => !i.deleted).forEach(intermediacao => {
+                const cliente = data.clientes.find(c => c.id === intermediacao.clienteId);
+                intermediacoesList.innerHTML += `
+                    <div class="card">
+                        <h3>Intermediação</h3>
+                        <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p><strong>Descrição:</strong> ${intermediacao.descricao}</p>
+                        <p><strong>Status:</strong> ${intermediacao.status}</p>
+                        <div class="actions">
+                            <button class="btn btn-edit" onclick="openModal('editIntermediacaoModal', '${intermediacao.id}', 'intermediacao')">✏️ Editar</button>
+                            <button class="btn btn-delete" onclick="deleteItem('${intermediacao.id}', 'intermediacoes')">🗑️ Deletar</button>
+                        </div>
                     </div>
                 `;
-            }).join('');
+            });
         }
 
         function renderRelatorios() {
-            const totalVendas = vendas.reduce((acc, v) => acc + v.valor, 0);
-            const totalLucro = vendas.reduce((acc, v) => acc + (v.lucro || 0), 0);
-            const margem = totalVendas > 0 ? (totalLucro / totalVendas * 100).toFixed(1) : 0;
-            const valorEstoque = veiculos.filter(v => v.status === 'disponivel').reduce((acc, v) => {
-                const compra = compras.find(c => c.veiculoId === v.id);
-                return acc + (compra?.valor || 0);
-            }, 0);
+            const totalVeiculosEstoque = data.veiculos.filter(v => !v.deleted && v.status === 'Disponível').length;
+            const totalClientes = data.clientes.filter(c => !c.deleted).length;
+            const totalVendasRealizadas = data.vendas.length;
+            const receitaTotal = data.vendas.reduce((sum, venda) => sum + venda.valor, 0);
 
-            document.getElementById('rel-receita').textContent = formatMoney(totalVendas);
-            document.getElementById('rel-lucro').textContent = formatMoney(totalLucro);
-            document.getElementById('rel-margem').textContent = margem + '%';
-            document.getElementById('rel-estoque').textContent = formatMoney(valorEstoque);
+            document.getElementById('totalVeiculosEstoque').textContent = totalVeiculosEstoque;
+            document.getElementById('totalClientes').textContent = totalClientes;
+            document.getElementById('totalVendasRealizadas').textContent = totalVendasRealizadas;
+            document.getElementById('receitaTotal').textContent = `R$ ${receitaTotal.toFixed(2)}`;
         }
 
-        // FORMS
-        document.getElementById('form-cliente').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const cliente = {
-                id: Date.now().toString(),
-                nome: document.getElementById('c-nome').value,
-                cpf: document.getElementById('c-cpf').value,
-                telefone: document.getElementById('c-telefone').value,
-                email: document.getElementById('c-email').value,
-                endereco: document.getElementById('c-endereco').value,
-                tipo: document.getElementById('c-tipo').value
-            };
-            clientes.push(cliente);
-            localStorage.setItem('clientes', JSON.stringify(clientes));
-            hideModal('modal-cliente');
-            e.target.reset();
-            showPage('clientes');
-        });
+        function renderArquivoMorto() {
+            const clientesArquivoMortoList = document.getElementById('clientesArquivoMortoList');
+            const veiculosArquivoMortoList = document.getElementById('veiculosArquivoMortoList');
+            const consignacoesArquivoMortoList = document.getElementById('consignacoesArquivoMortoList');
+            const intermediacoesArquivoMortoList = document.getElementById('intermediacoesArquivoMortoList');
 
-        document.getElementById('form-veiculo').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const veiculo = {
-                id: Date.now().toString(),
-                marca: document.getElementById('v-marca').value,
-                modelo: document.getElementById('v-modelo').value,
-                versao: document.getElementById('v-versao').value,
-                anoFabricacao: parseInt(document.getElementById('v-ano-fab').value),
-                anoModelo: parseInt(document.getElementById('v-ano-mod').value),
-                cor: document.getElementById('v-cor').value,
-                placa: document.getElementById('v-placa').value,
-                km: parseInt(document.getElementById('v-km').value),
-                combustivel: document.getElementById('v-combustivel').value,
-                cambio: document.getElementById('v-cambio').value,
-                blindado: document.getElementById('v-blindado').checked,
-                observacoes: document.getElementById('v-obs').value,
-                status: 'disponivel'
-            };
-            veiculos.push(veiculo);
-            localStorage.setItem('veiculos', JSON.stringify(veiculos));
-            alert('Veículo cadastrado com sucesso!');
-            e.target.reset();
-            showPage('estoque');
-        });
+            clientesArquivoMortoList.innerHTML = '';
+            veiculosArquivoMortoList.innerHTML = '';
+            consignacoesArquivoMortoList.innerHTML = '';
+            intermediacoesArquivoMortoList.innerHTML = '';
 
-        document.getElementById('form-compra').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const compra = {
-                id: Date.now().toString(),
-                veiculoId: document.getElementById('comp-veiculo').value,
-                fornecedorId: document.getElementById('comp-fornecedor').value,
-                data: document.getElementById('comp-data').value,
-                valor: parseFloat(document.getElementById('comp-valor').value)
-            };
-            compras.push(compra);
-            localStorage.setItem('compras', JSON.stringify(compras));
-            hideModal('modal-compra');
-            e.target.reset();
-            showPage('compras');
-        });
+            data.clientes.filter(c => c.deleted).forEach(cliente => {
+                clientesArquivoMortoList.innerHTML += `
+                    <div class="card">
+                        <h3>${cliente.nome} <span class="text-muted">(Cliente)</span></h3>
+                        <p><strong>CPF:</strong> ${cliente.cpf}</p>
+                        <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                        <div class="actions">
+                            <button class="btn btn-restore" onclick="restoreItem('${cliente.id}', 'clientes')">↻ Restaurar</button>
+                            <button class="btn btn-danger" onclick="deletePermanently('${cliente.id}', 'clientes')">❌ Apagar Definitivamente</button>
+                        </div>
+                    </div>
+                `;
+            });
 
-        document.getElementById('form-venda').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const veiculoId = document.getElementById('vend-veiculo').value;
-            const valor = parseFloat(document.getElementById('vend-valor').value);
-            const compra = compras.find(c => c.veiculoId === veiculoId);
-            const lucro = compra ? valor - compra.valor : 0;
+            data.veiculos.filter(v => v.deleted).forEach(veiculo => {
+                veiculosArquivoMortoList.innerHTML += `
+                    <div class="card">
+                        <h3>${veiculo.marca} ${veiculo.modelo} <span class="text-muted">(Veículo)</span></h3>
+                        <p><strong>Placa:</strong> ${veiculo.placa}</p>
+                        <p><strong>Status:</strong> ${veiculo.status}</p>
+                        <div class="actions">
+                            <button class="btn btn-restore" onclick="restoreItem('${veiculo.id}', 'veiculos')">↻ Restaurar</button>
+                            <button class="btn btn-danger" onclick="deletePermanently('${veiculo.id}', 'veiculos')">❌ Apagar Definitivamente</button>
+                        </div>
+                    </div>
+                `;
+            });
 
-            const venda = {
-                id: Date.now().toString(),
-                veiculoId: veiculoId,
-                clienteId: document.getElementById('vend-cliente').value,
-                data: document.getElementById('vend-data').value,
-                valor: valor,
-                lucro: lucro
-            };
-            vendas.push(venda);
-            
-            const veiculo = veiculos.find(v => v.id === veiculoId);
-            if (veiculo) veiculo.status = 'vendido';
-            
-            localStorage.setItem('vendas', JSON.stringify(vendas));
-            localStorage.setItem('veiculos', JSON.stringify(veiculos));
-            hideModal('modal-venda');
-            e.target.reset();
-            showPage('vendas');
-        });
+            data.consignacoes.filter(c => c.deleted).forEach(consignacao => {
+                const cliente = data.clientes.find(cl => cl.id === consignacao.clienteId);
+                const veiculo = data.veiculos.find(v => v.id === consignacao.veiculoId);
+                consignacoesArquivoMortoList.innerHTML += `
+                    <div class="card">
+                        <h3>Consignação <span class="text-muted">(Deletada)</span></h3>
+                        <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p><strong>Veículo:</strong> ${veiculo ? `${veiculo.marca} ${veiculo.modelo}` : 'N/A'}</p>
+                        <div class="actions">
+                            <button class="btn btn-restore" onclick="restoreItem('${consignacao.id}', 'consignacoes')">↻ Restaurar</button>
+                            <button class="btn btn-danger" onclick="deletePermanently('${consignacao.id}', 'consignacoes')">❌ Apagar Definitivamente</button>
+                        </div>
+                    </div>
+                `;
+            });
 
-        document.getElementById('form-consignacao').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const consignacao = {
-                id: Date.now().toString(),
-                veiculoId: document.getElementById('cons-veiculo').value,
-                proprietarioId: document.getElementById('cons-proprietario').value,
-                data: document.getElementById('cons-data').value,
-                prazo: parseInt(document.getElementById('cons-prazo').value),
-                percentual: parseFloat(document.getElementById('cons-percentual').value),
-                valorMinimo: parseFloat(document.getElementById('cons-valor-min').value)
-            };
-            consignacoes.push(consignacao);
-            localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
-            hideModal('modal-consignacao');
-            e.target.reset();
-            showPage('consignacoes');
-        });
-
-        document.getElementById('form-intermediacao').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const intermediacao = {
-                id: Date.now().toString(),
-                clienteId: document.getElementById('int-cliente').value,
-                veiculoDesejado: document.getElementById('int-veiculo').value,
-                especificacoes: document.getElementById('int-espec').value,
-                orcamento: parseFloat(document.getElementById('int-orcamento').value),
-                comissao: parseFloat(document.getElementById('int-comissao').value) || 0
-            };
-            intermediacoes.push(intermediacao);
-            localStorage.setItem('intermediacoes', JSON.stringify(intermediacoes));
-            hideModal('modal-intermediacao');
-            e.target.reset();
-            showPage('intermediacoes');
-        });
-
-        // UTILS
-        function formatMoney(value) {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+            data.intermediacoes.filter(i => i.deleted).forEach(intermediacao => {
+                const cliente = data.clientes.find(cl => cl.id === intermediacao.clienteId);
+                intermediacoesArquivoMortoList.innerHTML += `
+                    <div class="card">
+                        <h3>Intermediação <span class="text-muted">(Deletada)</span></h3>
+                        <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                        <p><strong>Descrição:</strong> ${intermediacao.descricao}</p>
+                        <div class="actions">
+                            <button class="btn btn-restore" onclick="restoreItem('${intermediacao.id}', 'intermediacoes')">↻ Restaurar</button>
+                            <button class="btn btn-danger" onclick="deletePermanently('${intermediacao.id}', 'intermediacoes')">❌ Apagar Definitivamente</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        function preencherSelects() {
-            const veiculosDisp = veiculos.filter(v => v.status === 'disponivel');
-            const fornecedores = clientes.filter(c => c.tipo === 'fornecedor');
-            const compradores = clientes.filter(c => c.tipo === 'comprador');
+        // --- CRUD Operations ---
 
-            document.getElementById('comp-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
-                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
-            
-            document.getElementById('comp-fornecedor').innerHTML = '<option value="">Selecione o Fornecedor</option>' + 
-                fornecedores.map(f => `<option value="${f.id}">${f.nome}</option>`).join('');
+        // Add Cliente
+        document.getElementById('addClienteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nome = document.getElementById('clienteNome').value;
+            const cpf = document.getElementById('clienteCPF').value;
+            const telefone = document.getElementById('clienteTelefone').value;
+            const email = document.getElementById('clienteEmail').value;
+            const endereco = document.getElementById('clienteEndereco').value;
+            const tiposCheckboxes = document.querySelectorAll('#addClienteModal input[name="clienteTipo"]:checked');
+            const tipos = Array.from(tiposCheckboxes).map(cb => cb.value);
 
-            document.getElementById('vend-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
-                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
-            
-            document.getElementById('vend-cliente').innerHTML = '<option value="">Selecione o Cliente</option>' + 
-                compradores.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-
-            document.getElementById('cons-veiculo').innerHTML = '<option value="">Selecione o Veículo</option>' + 
-                veiculosDisp.map(v => `<option value="${v.id}">${v.marca} ${v.modelo} - ${v.placa}</option>`).join('');
-            
-            document.getElementById('cons-proprietario').innerHTML = '<option value="">Selecione o Proprietário</option>' + 
-                clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-
-            document.getElementById('int-cliente').innerHTML = '<option value="">Selecione o Cliente</option>' + 
-                clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-        }
-
-        function exportarDados() {
-            const dados = { clientes, veiculos, compras, vendas, consignacoes, intermediacoes };
-            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `autogallery-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-        }
-
-        function importarDados() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'application/json';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const dados = JSON.parse(event.target.result);
-                    clientes = dados.clientes || [];
-                    veiculos = dados.veiculos || [];
-                    compras = dados.compras || [];
-                    vendas = dados.vendas || [];
-                    consignacoes = dados.consignacoes || [];
-                    intermediacoes = dados.intermediacoes || [];
-                    localStorage.setItem('clientes', JSON.stringify(clientes));
-                    localStorage.setItem('veiculos', JSON.stringify(veiculos));
-                    localStorage.setItem('compras', JSON.stringify(compras));
-                    localStorage.setItem('vendas', JSON.stringify(vendas));
-                    localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
-                    localStorage.setItem('intermediacoes', JSON.stringify(intermediacoes));
-                    alert('Dados importados com sucesso!');
-                    location.reload();
-                };
-                reader.readAsText(file);
+            const newCliente = {
+                id: generateId(),
+                nome, cpf, telefone, email, endereco, tipos,
+                typeHistory: tipos.map(type => ({ type: type, date: new Date().toISOString().split('T')[0] })),
+                deleted: false
             };
-            input.click();
+            data.clientes.push(newCliente);
+            saveData();
+            closeModal('addClienteModal');
+            renderClientes();
+            populateDropdowns();
+        });
+
+        // Edit Cliente
+        document.getElementById('editClienteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('editClienteId').value;
+            const clienteIndex = data.clientes.findIndex(c => c.id === id);
+
+            if (clienteIndex > -1) {
+                const cliente = data.clientes[clienteIndex];
+                cliente.nome = document.getElementById('editClienteNome').value;
+                cliente.cpf = document.getElementById('editClienteCPF').value;
+                cliente.telefone = document.getElementById('editClienteTelefone').value;
+                cliente.email = document.getElementById('editClienteEmail').value;
+                cliente.endereco = document.getElementById('editClienteEndereco').value;
+
+                const tiposCheckboxes = document.querySelectorAll('#editClienteTipoCheckboxes input[name="editClienteTipo"]:checked');
+                const newTipos = Array.from(tiposCheckboxes).map(cb => cb.value);
+
+                // Update typeHistory for newly added types
+                newTipos.forEach(newType => {
+                    if (!cliente.tipos.includes(newType)) {
+                        if (!cliente.typeHistory) cliente.typeHistory = [];
+                        cliente.typeHistory.push({ type: newType, date: new Date().toISOString().split('T')[0] });
+                    }
+                });
+                cliente.tipos = newTipos; // Update the active types list
+
+                saveData();
+                closeModal('editClienteModal');
+                renderClientes();
+                populateDropdowns();
+            }
+        });
+
+        // Add Veiculo
+        document.getElementById('addVeiculoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const marca = document.getElementById('veiculoMarca').value;
+            const modelo = document.getElementById('veiculoModelo').value;
+            const ano = parseInt(document.getElementById('veiculoAno').value);
+            const cor = document.getElementById('veiculoCor').value;
+            const placa = document.getElementById('veiculoPlaca').value;
+            const precoCompra = parseFloat(document.getElementById('veiculoPrecoCompra').value);
+            const precoVenda = parseFloat(document.getElementById('veiculoPrecoVenda').value);
+
+            const newVeiculo = {
+                id: generateId(),
+                marca, modelo, ano, cor, placa, precoCompra, precoVenda,
+                status: 'Disponível',
+                deleted: false
+            };
+            data.veiculos.push(newVeiculo);
+            saveData();
+            this.reset();
+            renderVeiculos();
+            populateDropdowns();
+            renderRelatorios();
+        });
+
+        // Edit Veiculo
+        document.getElementById('editVeiculoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('editVeiculoId').value;
+            const veiculoIndex = data.veiculos.findIndex(v => v.id === id);
+
+            if (veiculoIndex > -1) {
+                const veiculo = data.veiculos[veiculoIndex];
+                veiculo.marca = document.getElementById('editVeiculoMarca').value;
+                veiculo.modelo = document.getElementById('editVeiculoModelo').value;
+                veiculo.ano = parseInt(document.getElementById('editVeiculoAno').value);
+                veiculo.cor = document.getElementById('editVeiculoCor').value;
+                veiculo.placa = document.getElementById('editVeiculoPlaca').value;
+                veiculo.precoCompra = parseFloat(document.getElementById('editVeiculoPrecoCompra').value);
+                veiculo.precoVenda = parseFloat(document.getElementById('editVeiculoPrecoVenda').value);
+                veiculo.status = document.getElementById('editVeiculoStatus').value;
+
+                saveData();
+                closeModal('editVeiculoModal');
+                renderVeiculos();
+                populateDropdowns();
+                renderRelatorios();
+            }
+        });
+
+        // Register Compra
+        document.getElementById('registerCompraForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fornecedorId = document.getElementById('compraFornecedor').value;
+            const veiculoId = document.getElementById('compraVeiculo').value;
+            const dataCompra = document.getElementById('compraData').value;
+            const valorCompra = parseFloat(document.getElementById('compraValor').value);
+
+            const newCompra = {
+                id: generateId(),
+                fornecedorId, veiculoId, data: dataCompra, valor: valorCompra
+            };
+            data.compras.push(newCompra);
+
+            // Update vehicle status to 'Vendido'
+            const veiculo = data.veiculos.find(v => v.id === veiculoId);
+            if (veiculo) {
+                veiculo.status = 'Vendido';
+            }
+
+            // Update supplier type to 'Vendedor'
+            updateClientType(fornecedorId, 'Vendedor');
+
+            saveData();
+            this.reset();
+            renderCompras();
+            renderVeiculos(); // Update vehicle list
+            populateDropdowns(); // Update available vehicles
+            renderRelatorios();
+        });
+
+        // Register Venda
+        document.getElementById('registerVendaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const clienteId = document.getElementById('vendaCliente').value;
+            const veiculoId = document.getElementById('vendaVeiculo').value;
+            const dataVenda = document.getElementById('vendaData').value;
+            const valorVenda = parseFloat(document.getElementById('vendaValor').value);
+
+            const newVenda = {
+                id: generateId(),
+                clienteId, veiculoId, data: dataVenda, valor: valorVenda
+            };
+            data.vendas.push(newVenda);
+
+            // Update vehicle status to 'Vendido'
+            const veiculo = data.veiculos.find(v => v.id === veiculoId);
+            if (veiculo) {
+                veiculo.status = 'Vendido';
+            }
+
+            // Update client type to 'Comprador'
+            updateClientType(clienteId, 'Comprador');
+
+            saveData();
+            this.reset();
+            renderVendas();
+            renderVeiculos(); // Update vehicle list
+            populateDropdowns(); // Update available vehicles
+            renderRelatorios();
+        });
+
+        // Add Consignacao
+        document.getElementById('addConsignacaoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const clienteId = document.getElementById('consignacaoCliente').value;
+            const veiculoId = document.getElementById('consignacaoVeiculo').value;
+            const dataInicio = document.getElementById('consignacaoDataInicio').value;
+            const prazo = parseInt(document.getElementById('consignacaoPrazo').value);
+            const comissao = parseFloat(document.getElementById('consignacaoComissao').value);
+
+            const newConsignacao = {
+                id: generateId(),
+                clienteId, veiculoId, dataInicio, prazo, comissao,
+                deleted: false
+            };
+            data.consignacoes.push(newConsignacao);
+            saveData();
+            closeModal('addConsignacaoModal');
+            renderConsignacoes();
+        });
+
+        // Edit Consignacao
+        document.getElementById('editConsignacaoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('editConsignacaoId').value;
+            const consignacaoIndex = data.consignacoes.findIndex(c => c.id === id);
+
+            if (consignacaoIndex > -1) {
+                const consignacao = data.consignacoes[consignacaoIndex];
+                consignacao.clienteId = document.getElementById('editConsignacaoCliente').value;
+                consignacao.veiculoId = document.getElementById('editConsignacaoVeiculo').value;
+                consignacao.dataInicio = document.getElementById('editConsignacaoDataInicio').value;
+                consignacao.prazo = parseInt(document.getElementById('editConsignacaoPrazo').value);
+                consignacao.comissao = parseFloat(document.getElementById('editConsignacaoComissao').value);
+
+                saveData();
+                closeModal('editConsignacaoModal');
+                renderConsignacoes();
+            }
+        });
+
+        // Add Intermediacao
+        document.getElementById('addIntermediacaoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const clienteId = document.getElementById('intermediacaoCliente').value;
+            const descricao = document.getElementById('intermediacaoDescricao').value;
+            const status = document.getElementById('intermediacaoStatus').value;
+
+            const newIntermediacao = {
+                id: generateId(),
+                clienteId, descricao, status,
+                deleted: false
+            };
+            data.intermediacoes.push(newIntermediacao);
+            saveData();
+            closeModal('addIntermediacaoModal');
+            renderIntermediacoes();
+        });
+
+        // Edit Intermediacao
+        document.getElementById('editIntermediacaoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('editIntermediacaoId').value;
+            const intermediacaoIndex = data.intermediacoes.findIndex(i => i.id === id);
+
+            if (intermediacaoIndex > -1) {
+                const intermediacao = data.intermediacoes[intermediacaoIndex];
+                intermediacao.clienteId = document.getElementById('editIntermediacaoCliente').value;
+                intermediacao.descricao = document.getElementById('editIntermediacaoDescricao').value;
+                intermediacao.status = document.getElementById('editIntermediacaoStatus').value;
+
+                saveData();
+                closeModal('editIntermediacaoModal');
+                renderIntermediacoes();
+            }
+        });
+
+        // --- Delete to Archive / Restore / Delete Permanently ---
+
+        function deleteItem(id, type) {
+            if (confirm('Tem certeza que deseja mover este item para o Arquivo Morto?')) {
+                const item = data[type].find(item => item.id === id);
+                if (item) {
+                    item.deleted = true;
+                    saveData();
+                    // Re-render relevant lists
+                    if (type === 'clientes') renderClientes();
+                    else if (type === 'veiculos') renderVeiculos();
+                    else if (type === 'consignacoes') renderConsignacoes();
+                    else if (type === 'intermediacoes') renderIntermediacoes();
+                    populateDropdowns(); // Update dropdowns as deleted items should not appear
+                    renderRelatorios();
+                }
+            }
         }
 
-        // INIT
-        showPage('estoque');
+        function restoreItem(id, type) {
+            if (confirm('Tem certeza que deseja restaurar este item?')) {
+                const item = data[type].find(item => item.id === id);
+                if (item) {
+                    item.deleted = false;
+                    saveData();
+                    renderArquivoMorto();
+                    // Re-render relevant lists
+                    if (type === 'clientes') renderClientes();
+                    else if (type === 'veiculos') renderVeiculos();
+                    else if (type === 'consignacoes') renderConsignacoes();
+                    else if (type === 'intermediacoes') renderIntermediacoes();
+                    populateDropdowns();
+                    renderRelatorios();
+                }
+            }
+        }
+
+        function deletePermanently(id, type) {
+            if (confirm('ATENÇÃO: Tem certeza que deseja APAGAR ESTE ITEM PERMANENTEMENTE? Esta ação não pode ser desfeita.')) {
+                data[type] = data[type].filter(item => item.id !== id);
+                saveData();
+                renderArquivoMorto();
+                renderRelatorios();
+            }
+        }
+
+        // --- Search Functions ---
+
+        function searchClientes() {
+            renderClientes();
+        }
+
+        function searchVeiculos() {
+            renderVeiculos();
+        }
+
+        // --- Dropdown Population ---
+
+        function populateDropdowns(targetId = null, items = null, selectedId = null) {
+            // Populate Fornecedor/Vendedor dropdown for Compra
+            const compraFornecedorSelect = document.getElementById('compraFornecedor');
+            if (compraFornecedorSelect) {
+                compraFornecedorSelect.innerHTML = '<option value="">Selecione um fornecedor/vendedor</option>';
+                data.clientes.filter(c => !c.deleted && (c.tipos.includes('Fornecedor') || c.tipos.includes('Vendedor'))).forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    compraFornecedorSelect.appendChild(option);
+                });
+            }
+
+            // Populate Veículo dropdown for Compra (all available vehicles)
+            const compraVeiculoSelect = document.getElementById('compraVeiculo');
+            if (compraVeiculoSelect) {
+                compraVeiculoSelect.innerHTML = '<option value="">Selecione um veículo</option>';
+                data.veiculos.filter(v => !v.deleted && v.status === 'Disponível').forEach(veiculo => {
+                    const option = document.createElement('option');
+                    option.value = veiculo.id;
+                    option.textContent = `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})`;
+                    compraVeiculoSelect.appendChild(option);
+                });
+            }
+
+            // Populate Cliente dropdown for Venda (only Compradores)
+            const vendaClienteSelect = document.getElementById('vendaCliente');
+            if (vendaClienteSelect) {
+                vendaClienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+                data.clientes.filter(c => !c.deleted && c.tipos.includes('Comprador')).forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    vendaClienteSelect.appendChild(option);
+                });
+            }
+
+            // Populate Veículo dropdown for Venda (only Disponível vehicles)
+            const vendaVeiculoSelect = document.getElementById('vendaVeiculo');
+            if (vendaVeiculoSelect) {
+                vendaVeiculoSelect.innerHTML = '<option value="">Selecione um veículo</option>';
+                data.veiculos.filter(v => !v.deleted && v.status === 'Disponível').forEach(veiculo => {
+                    const option = document.createElement('option');
+                    option.value = veiculo.id;
+                    option.textContent = `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})`;
+                    vendaVeiculoSelect.appendChild(option);
+                });
+            }
+
+            // Populate Cliente dropdown for Consignação (all non-deleted clients)
+            const consignacaoClienteSelect = document.getElementById('consignacaoCliente');
+            if (consignacaoClienteSelect) {
+                consignacaoClienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+                data.clientes.filter(c => !c.deleted).forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    consignacaoClienteSelect.appendChild(option);
+                });
+            }
+
+            // Populate Veículo dropdown for Consignação (all non-deleted vehicles)
+            const consignacaoVeiculoSelect = document.getElementById('consignacaoVeiculo');
+            if (consignacaoVeiculoSelect) {
+                consignacaoVeiculoSelect.innerHTML = '<option value="">Selecione um veículo</option>';
+                data.veiculos.filter(v => !v.deleted).forEach(veiculo => {
+                    const option = document.createElement('option');
+                    option.value = veiculo.id;
+                    option.textContent = `${veiculo.marca} ${veiculo.modelo} (${veiculo.placa})`;
+                    consignacaoVeiculoSelect.appendChild(option);
+                });
+            }
+
+            // Populate Cliente dropdown for Intermediação (all non-deleted clients)
+            const intermediacaoClienteSelect = document.getElementById('intermediacaoCliente');
+            if (intermediacaoClienteSelect) {
+                intermediacaoClienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+                data.clientes.filter(c => !c.deleted).forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    intermediacaoClienteSelect.appendChild(option);
+                });
+            }
+
+            // Generic dropdown population for edit modals
+            if (targetId && items) {
+                const selectElement = document.getElementById(targetId);
+                if (selectElement) {
+                    selectElement.innerHTML = '<option value="">Selecione...</option>';
+                    items.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.nome || `${item.marca} ${item.modelo} (${item.placa})`;
+                        if (item.id === selectedId) {
+                            option.selected = true;
+                        }
+                        selectElement.appendChild(option);
+                    });
+                }
+            }
+        }
+
+        // --- Navigation and Initialization ---
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            document.querySelectorAll('nav.sidebar ul li a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`nav.sidebar ul li a[data-section="${sectionId}"]`).classList.add('active');
+
+            // Render content for the active section
+            if (sectionId === 'estoque') renderVeiculos();
+            else if (sectionId === 'clientes') renderClientes();
+            else if (sectionId === 'registrar-compra') renderCompras();
+            else if (sectionId === 'registrar-venda') renderVendas();
+            else if (sectionId === 'consignacoes') renderConsignacoes();
+            else if (sectionId === 'intermediacoes') renderIntermediacoes();
+            else if (sectionId === 'relatorios') renderRelatorios();
+            else if (sectionId === 'arquivo-morto') renderArquivoMorto();
+
+            populateDropdowns(); // Always update dropdowns when changing sections
+        }
+
+        // Event listeners for sidebar navigation
+        document.querySelectorAll('nav.sidebar ul li a').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            showSection('estoque'); // Show estoque by default
+        });
     </script>
-
 </body>
 </html>
