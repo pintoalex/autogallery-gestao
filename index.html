@@ -1409,21 +1409,75 @@
         }
 
         function addCliente(event) {
-            event.preventDefault();
-            const id = document.getElementById('cliente-id').value;
-            const nome = document.getElementById('cliente-nome').value;
-            const cpf = document.getElementById('cliente-cpf').value;
-            const telefone = document.getElementById('cliente-telefone').value;
-            const email = document.getElementById('cliente-email').value;
-            const endereco = document.getElementById('cliente-endereco').value;
-
-            const selectedTypes = [];
-            if (document.getElementById('cliente-tipo-comprador').checked) selectedTypes.push({ tipo: 'Comprador', data: getTodayDateString() });
-            if (document.getElementById('cliente-tipo-vendedor').checked) selectedTypes.push({ tipo: 'Vendedor', data: getTodayDateString() });
-            if (document.getElementById('cliente-tipo-fornecedor').checked) selectedTypes.push({ tipo: 'Fornecedor', data: getTodayDateString() });
-
-            if (id) {
-                // Edit existing client
+    event.preventDefault();
+    const id = document.getElementById('cliente-id').value;
+    const nome = document.getElementById('cliente-nome').value;
+    const cpf = document.getElementById('cliente-cpf').value;
+    const telefone = document.getElementById('cliente-telefone').value;
+    const email = document.getElementById('cliente-email').value;
+    const endereco = document.getElementById('cliente-endereco').value;
+    
+    const selectedTypes = [];
+    if (document.getElementById('cliente-tipo-comprador').checked) {
+        selectedTypes.push({ tipo: 'Comprador', data: getTodayDateString() });
+    }
+    if (document.getElementById('cliente-tipo-vendedor').checked) {
+        selectedTypes.push({ tipo: 'Vendedor', data: getTodayDateString() });
+    }
+    if (document.getElementById('cliente-tipo-fornecedor').checked) {
+        selectedTypes.push({ tipo: 'Fornecedor', data: getTodayDateString() });
+    }
+    
+    if (id) {
+        // Edit existing client
+        const index = clientes.findIndex(c => c.id === id);
+        if (index !== -1) {
+            clientes[index] = { 
+                ...clientes[index], 
+                nome, 
+                cpf, 
+                telefone, 
+                email, 
+                endereco 
+            };
+            
+            // Update types - merge with existing
+            const existingTypes = clientes[index].historicoTipos || [];
+            selectedTypes.forEach(newType => {
+                if (!existingTypes.find(t => t.tipo === newType.tipo)) {
+                    existingTypes.push(newType);
+                }
+            });
+            clientes[index].historicoTipos = existingTypes;
+            clientes[index].tipos = existingTypes.map(t => t.tipo);
+            
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            alert('Cliente atualizado com sucesso!');
+        }
+    } else {
+        // ADD NEW CLIENT - ESTE CÓDIGO ESTAVA FALTANDO!
+        const novoCliente = {
+            id: 'cli_' + Date.now(),
+            nome,
+            cpf,
+            telefone,
+            email,
+            endereco,
+            tipos: selectedTypes.map(t => t.tipo),
+            historicoTipos: selectedTypes,
+            deleted: false
+        };
+        
+        clientes.push(novoCliente);
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+        alert('Cliente cadastrado com sucesso!');
+    }
+    
+    // Reset form and close modal
+    document.getElementById('clienteForm').reset();
+    document.getElementById('clienteModal').style.display = 'none';
+    loadClientes();
+}                // Edit existing client
                 const index = clientes.findIndex(c => c.id === id);
                 if (index !== -1) {
                     clientes[index] = { ...clientes[index], nome, cpf, telefone, email, endereco };
