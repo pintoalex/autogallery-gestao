@@ -510,7 +510,7 @@
             <div class="page" id="estoque">
                 <div class="page-header">
                     <h1 class="page-title">Estoque de Veículos</h1>
-                    <button class="btn btn-primary" id="btnAddVeiculo">+ Adicionar Veículo</button>
+                    <button class="btn btn-primary" onclick="abrirModalVeiculo()">+ Adicionar Veículo</button>
                 </div>
                 <input type="text" class="search-bar" id="searchEstoque" placeholder="Buscar veículo...">
                 <div class="cards-grid" id="estoqueList"></div>
@@ -519,7 +519,7 @@
             <div class="page" id="clientes">
                 <div class="page-header">
                     <h1 class="page-title">Clientes</h1>
-                    <button class="btn btn-primary" id="btnAddCliente">+ Adicionar Cliente</button>
+                    <button class="btn btn-primary" onclick="abrirModalCliente()">+ Adicionar Cliente</button>
                 </div>
                 <input type="text" class="search-bar" id="searchClientes" placeholder="Buscar cliente...">
                 <div class="table-container">
@@ -542,7 +542,7 @@
             <div class="page" id="consignacoes">
                 <div class="page-header">
                     <h1 class="page-title">Consignações</h1>
-                    <button class="btn btn-primary" id="btnAddConsignacao">+ Nova Consignação</button>
+                    <button class="btn btn-primary" onclick="abrirModalConsignacao()">+ Nova Consignação</button>
                 </div>
                 <input type="text" class="search-bar" id="searchConsignacoes" placeholder="Buscar consignação...">
                 <div class="cards-grid" id="consignacoesList"></div>
@@ -551,7 +551,7 @@
             <div class="page" id="servico-compra">
                 <div class="page-header">
                     <h1 class="page-title">Serviço de Compra</h1>
-                    <button class="btn btn-primary" id="btnAddServicoCompra">+ Novo Serviço</button>
+                    <button class="btn btn-primary" onclick="abrirModalServicoCompra()">+ Novo Serviço</button>
                 </div>
                 <input type="text" class="search-bar" id="searchServicoCompra" placeholder="Buscar serviço...">
                 <div class="cards-grid" id="servicoCompraList"></div>
@@ -581,7 +581,7 @@
                         </div>
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <button class="btn btn-primary" id="btnFiltrarRelatorio">Filtrar</button>
+                            <button class="btn btn-primary" onclick="filtrarRelatorio()">Filtrar</button>
                         </div>
                     </div>
                 </div>
@@ -593,7 +593,7 @@
                 <div class="table-container" style="margin-top: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3>Detalhamento</h3>
-                        <button class="btn btn-success" id="btnExportarExcel">📊 Exportar Excel</button>
+                        <button class="btn btn-success" onclick="exportarExcel()">📊 Exportar Excel</button>
                     </div>
                     <table>
                         <thead id="relatorioTableHead"></thead>
@@ -619,7 +619,7 @@
                         </div>
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <button class="btn btn-primary" id="btnFiltrarArquivo">Filtrar</button>
+                            <button class="btn btn-primary" onclick="filtrarArquivo()">Filtrar</button>
                         </div>
                     </div>
                 </div>
@@ -641,7 +641,7 @@
                         <label>Taxa Mensal (%)</label>
                         <input type="number" id="taxaJuros" step="0.1" value="1.0">
                     </div>
-                    <button class="btn btn-primary" id="btnSalvarConfig">Salvar Configurações</button>
+                    <button class="btn btn-primary" onclick="salvarConfig()">Salvar Configurações</button>
                 </div>
             </div>
         </div>
@@ -651,9 +651,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Cliente</h2>
-                <span class="close" data-modal="clienteModal">&times;</span>
+                <span class="close" onclick="fecharModal('clienteModal')">&times;</span>
             </div>
-            <form id="clienteForm">
+            <form onsubmit="salvarCliente(event)">
                 <input type="hidden" id="cliente-id">
                 <div class="form-group">
                     <label>Nome *</label>
@@ -693,7 +693,7 @@
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('clienteModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
@@ -704,9 +704,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Veículo</h2>
-                <span class="close" data-modal="veiculoModal">&times;</span>
+                <span class="close" onclick="fecharModal('veiculoModal')">&times;</span>
             </div>
-            <form id="veiculoForm">
+            <form onsubmit="salvarVeiculo(event)">
                 <input type="hidden" id="veiculo-id">
                 <div class="form-group">
                     <label>Marca *</label>
@@ -745,7 +745,7 @@
                     <textarea id="veiculo-obs"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('veiculoModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
@@ -756,9 +756,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Consignação</h2>
-                <span class="close" data-modal="consignacaoModal">&times;</span>
+                <span class="close" onclick="fecharModal('consignacaoModal')">&times;</span>
             </div>
-            <form id="consignacaoForm">
+            <form onsubmit="salvarConsignacao(event)">
                 <input type="hidden" id="consignacao-id">
                 <div class="form-group">
                     <label>Cliente *</label>
@@ -789,7 +789,7 @@
                     <textarea id="consignacao-obs"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('consignacaoModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
@@ -800,9 +800,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Serviço de Compra</h2>
-                <span class="close" data-modal="servicoCompraModal">&times;</span>
+                <span class="close" onclick="fecharModal('servicoCompraModal')">&times;</span>
             </div>
-            <form id="servicoCompraForm">
+            <form onsubmit="salvarServicoCompra(event)">
                 <input type="hidden" id="servico-id">
                 <div class="form-group">
                     <label>Cliente *</label>
@@ -838,7 +838,7 @@
                     <textarea id="servico-obs"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('servicoCompraModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
@@ -849,10 +849,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Despesas do Veículo</h2>
-                <span class="close" data-modal="despesasModal">&times;</span>
+                <span class="close" onclick="fecharModal('despesasModal')">&times;</span>
             </div>
             <input type="hidden" id="despesa-veiculo-id">
-            <form id="despesaForm">
+            <form onsubmit="salvarDespesa(event)">
                 <div class="form-group">
                     <label>Categoria *</label>
                     <select id="despesa-categoria" required>
@@ -886,7 +886,7 @@
                     <textarea id="despesa-descricao"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary close-modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('despesasModal')">Fechar</button>
                     <button type="submit" class="btn btn-primary">Adicionar Despesa</button>
                 </div>
             </form>
@@ -895,512 +895,137 @@
     </div>
 
     <script>
-        let veiculos = [];
-let clientes = [];
-let consignacoes = [];
-let servicoCompra = [];
-let despesas = [];
-let config = {taxaJuros: 1.0};
+        var veiculos = [];
+        var clientes = [];
+        var consignacoes = [];
+        var servicoCompra = [];
+        var despesas = [];
+        var config = {taxaJuros: 1.0};
 
-// Carregar dados com tratamento de erro
-try {
-    const storedVeiculos = localStorage.getItem('veiculos');
-    if (storedVeiculos) veiculos = JSON.parse(storedVeiculos);
-    
-    const storedClientes = localStorage.getItem('clientes');
-    if (storedClientes) clientes = JSON.parse(storedClientes);
-    
-    const storedConsignacoes = localStorage.getItem('consignacoes');
-    if (storedConsignacoes) consignacoes = JSON.parse(storedConsignacoes);
-    
-    const storedServico = localStorage.getItem('servicoCompra');
-    if (storedServico) servicoCompra = JSON.parse(storedServico);
-    
-    const storedDespesas = localStorage.getItem('despesas');
-    if (storedDespesas) despesas = JSON.parse(storedDespesas);
-    
-    const storedConfig = localStorage.getItem('config');
-    if (storedConfig) config = JSON.parse(storedConfig);
-} catch (error) {
-    console.error('Erro ao carregar dados:', error);
-} veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
-        
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const pageName = this.getAttribute('data-page');
-                    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.getElementById(pageName).classList.add('active');
-                    
-                    if (pageName === 'dashboard') loadDashboard();
-                    if (pageName === 'estoque') {
-    veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
-    loadEstoque();
-}                                   
-                    if (pageName === 'clientes') loadClientes();
-                    if (pageName === 'consignacoes') loadConsignacoes();
-                    if (pageName === 'servico-compra') loadServicoCompra();
-                    if (pageName === 'relatorios') loadRelatorios();
-                    if (pageName === 'arquivo-morto') loadArquivoMorto();
-                    if (pageName === 'configuracoes') loadConfiguracoes();
-                });
-            });
-
-            document.querySelectorAll('.close').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modalId = this.getAttribute('data-modal');
-                    document.getElementById(modalId).style.display = 'none';
-                });
-            });
-
-            document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-
-            window.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
-                }
-            });
-
-            document.getElementById('btnAddCliente').addEventListener('click', function() {
-                document.getElementById('clienteForm').reset();
-                document.getElementById('cliente-id').value = '';
-                document.getElementById('clienteModal').style.display = 'block';
-            });
-
-            document.getElementById('clienteForm').addEventListener('submit', function(e) {
-                e.preventDefault();
+        function carregarDados() {
+            try {
+                var v = localStorage.getItem('veiculos');
+                if (v) veiculos = JSON.parse(v);
                 
-                const id = document.getElementById('cliente-id').value;
-                const nome = document.getElementById('cliente-nome').value;
-                const cpf = document.getElementById('cliente-cpf').value;
-                const telefone = document.getElementById('cliente-telefone').value;
-                const email = document.getElementById('cliente-email').value;
-                const endereco = document.getElementById('cliente-endereco').value;
+                var c = localStorage.getItem('clientes');
+                if (c) clientes = JSON.parse(c);
                 
-                const selectedTypes = [];
-                if (document.getElementById('cliente-tipo-comprador').checked) {
-                    selectedTypes.push({ tipo: 'Comprador', data: new Date().toLocaleDateString('pt-BR') });
-                }
-                if (document.getElementById('cliente-tipo-vendedor').checked) {
-                    selectedTypes.push({ tipo: 'Vendedor', data: new Date().toLocaleDateString('pt-BR') });
-                }
-                if (document.getElementById('cliente-tipo-fornecedor').checked) {
-                    selectedTypes.push({ tipo: 'Fornecedor', data: new Date().toLocaleDateString('pt-BR') });
-                }
+                var con = localStorage.getItem('consignacoes');
+                if (con) consignacoes = JSON.parse(con);
                 
-                if (id) {
-                    const index = clientes.findIndex(c => c.id === id);
-                    if (index !== -1) {
-                        clientes[index] = { 
-                            ...clientes[index], 
-                            nome, 
-                            cpf, 
-                            telefone, 
-                            email, 
-                            endereco 
-                        };
-                        const existingTypes = clientes[index].historicoTipos || [];
-                        selectedTypes.forEach(newType => {
-                            if (!existingTypes.find(t => t.tipo === newType.tipo)) {
-                                existingTypes.push(newType);
-                            }
-                        });
-                        clientes[index].historicoTipos = existingTypes;
-                        clientes[index].tipos = existingTypes.map(t => t.tipo);
+                var sc = localStorage.getItem('servicoCompra');
+                if (sc) servicoCompra = JSON.parse(sc);
+                
+                var d = localStorage.getItem('despesas');
+                if (d) despesas = JSON.parse(d);
+                
+                var cfg = localStorage.getItem('config');
+                if (cfg) config = JSON.parse(cfg);
+            } catch (e) {
+                console.error('Erro ao carregar dados:', e);
+            }
+        }
+
+        function navegarPara(pageName) {
+            var menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            
+            var pages = document.querySelectorAll('.page');
+            pages.forEach(function(page) {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageName).classList.add('active');
+            
+            var menuItem = document.querySelector('[data-page="' + pageName + '"]');
+            if (menuItem) menuItem.classList.add('active');
+            
+            carregarDados();
+            
+            if (pageName === 'dashboard') loadDashboard();
+            if (pageName === 'estoque') loadEstoque();
+            if (pageName === 'clientes') loadClientes();
+            if (pageName === 'consignacoes') loadConsignacoes();
+            if (pageName === 'servico-compra') loadServicoCompra();
+            if (pageName === 'relatorios') loadRelatorios();
+            if (pageName === 'arquivo-morto') loadArquivoMorto();
+            if (pageName === 'configuracoes') loadConfiguracoes();
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function abrirModalCliente() {
+            document.getElementById('cliente-id').value = '';
+            document.getElementById('cliente-nome').value = '';
+            document.getElementById('cliente-cpf').value = '';
+            document.getElementById('cliente-telefone').value = '';
+            document.getElementById('cliente-email').value = '';
+            document.getElementById('cliente-endereco').value = '';
+            document.getElementById('cliente-tipo-comprador').checked = false;
+            document.getElementById('cliente-tipo-vendedor').checked = false;
+            document.getElementById('cliente-tipo-fornecedor').checked = false;
+            document.getElementById('clienteModal').style.display = 'block';
+        }
+
+        function salvarCliente(event) {
+            event.preventDefault();
+            
+            var id = document.getElementById('cliente-id').value;
+            var nome = document.getElementById('cliente-nome').value;
+            var cpf = document.getElementById('cliente-cpf').value;
+            var telefone = document.getElementById('cliente-telefone').value;
+            var email = document.getElementById('cliente-email').value;
+            var endereco = document.getElementById('cliente-endereco').value;
+            
+            var tipos = [];
+            if (document.getElementById('cliente-tipo-comprador').checked) tipos.push('Comprador');
+            if (document.getElementById('cliente-tipo-vendedor').checked) tipos.push('Vendedor');
+            if (document.getElementById('cliente-tipo-fornecedor').checked) tipos.push('Fornecedor');
+            
+            if (id) {
+                for (var i = 0; i < clientes.length; i++) {
+                    if (clientes[i].id === id) {
+                        clientes[i].nome = nome;
+                        clientes[i].cpf = cpf;
+                        clientes[i].telefone = telefone;
+                        clientes[i].email = email;
+                        clientes[i].endereco = endereco;
+                        clientes[i].tipos = tipos;
+                        break;
                     }
-                } else {
-                    const novoCliente = {
-                        id: 'cli_' + Date.now(),
-                        nome,
-                        cpf,
-                        telefone,
-                        email,
-                        endereco,
-                        tipos: selectedTypes.map(t => t.tipo),
-                        historicoTipos: selectedTypes,
-                        deleted: false
-                    };
-                    clientes.push(novoCliente);
                 }
-                
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-                document.getElementById('clienteModal').style.display = 'none';
-                loadClientes();
-                alert(id ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
-            });
-
-            document.getElementById('btnAddVeiculo').addEventListener('click', function() {
-                document.getElementById('veiculoForm').reset();
-                document.getElementById('veiculo-id').value = '';
-                document.getElementById('veiculoModal').style.display = 'block';
-            });
-
-            document.getElementById('veiculoForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const id = document.getElementById('veiculo-id').value;
-                const marca = document.getElementById('veiculo-marca').value;
-                const modelo = document.getElementById('veiculo-modelo').value;
-                const ano = document.getElementById('veiculo-ano').value;
-                const placa = document.getElementById('veiculo-placa').value;
-                const cor = document.getElementById('veiculo-cor').value;
-                const valorCompra = parseFloat(document.getElementById('veiculo-valor-compra').value);
-                const valorVenda = parseFloat(document.getElementById('veiculo-valor-venda').value) || 0;
-                const dataCompra = document.getElementById('veiculo-data-compra').value;
-                const obs = document.getElementById('veiculo-obs').value;
-                
-                if (id) {
-                    const index = veiculos.findIndex(v => v.id === id);
-                    if (index !== -1) {
-                        veiculos[index] = { 
-                            ...veiculos[index],
-                            marca, 
-                            modelo, 
-                            ano, 
-                            placa, 
-                            cor, 
-                            valorCompra, 
-                            valorVenda,
-                            dataCompra,
-                            obs
-                        };
-                    }
-                } else {
-                    const novoVeiculo = {
-                        id: 'vei_' + Date.now(),
-                        marca,
-                        modelo,
-                        ano,
-                        placa,
-                        cor,
-                        valorCompra,
-                        valorVenda,
-                        dataCompra,
-                        obs,
-                        deleted: false,
-                        vendido: false
-                    };
-                    veiculos.push(novoVeiculo);
-                }
-                
-                localStorage.setItem('veiculos', JSON.stringify(veiculos));
-                document.getElementById('veiculoModal').style.display = 'none';
-                loadEstoque();
-                loadDashboard(); // Atualizar dashboard também                
-                alert(id ? 'Veículo atualizado com sucesso!' : 'Veículo cadastrado com sucesso!');
-            });
-
-            document.getElementById('btnAddConsignacao').addEventListener('click', function() {
-                document.getElementById('consignacaoForm').reset();
-                document.getElementById('consignacao-id').value = '';
-                updateClienteSelects();
-                document.getElementById('consignacaoModal').style.display = 'block';
-            });
-
-            document.getElementById('consignacaoForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const id = document.getElementById('consignacao-id').value;
-                const clienteId = document.getElementById('consignacao-cliente').value;
-                const veiculo = document.getElementById('consignacao-veiculo').value;
-                const placa = document.getElementById('consignacao-placa').value;
-                const valorMinimo = parseFloat(document.getElementById('consignacao-valor-minimo').value);
-                const comissao = parseFloat(document.getElementById('consignacao-comissao').value);
-                const data = document.getElementById('consignacao-data').value;
-                const obs = document.getElementById('consignacao-obs').value;
-                
-                const cliente = clientes.find(c => c.id === clienteId);
-                
-                if (id) {
-                    const index = consignacoes.findIndex(c => c.id === id);
-                    if (index !== -1) {
-                        consignacoes[index] = {
-                            ...consignacoes[index],
-                            clienteId,
-                            clienteNome: cliente?.nome || '',
-                            veiculo,
-                            placa,
-                            valorMinimo,
-                            comissao,
-                            data,
-                            obs
-                        };
-                    }
-                } else {
-                    const novaConsignacao = {
-                        id: 'con_' + Date.now(),
-                        clienteId,
-                        clienteNome: cliente?.nome || '',
-                        veiculo,
-                        placa,
-                        valorMinimo,
-                        comissao,
-                        data,
-                        obs,
-                        deleted: false
-                    };
-                    consignacoes.push(novaConsignacao);
-                }
-                
-                localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
-                document.getElementById('consignacaoModal').style.display = 'none';
-                loadConsignacoes();
-                alert(id ? 'Consignação atualizada com sucesso!' : 'Consignação cadastrada com sucesso!');
-            });
-
-            document.getElementById('btnAddServicoCompra').addEventListener('click', function() {
-                document.getElementById('servicoCompraForm').reset();
-                document.getElementById('servico-id').value = '';
-                updateClienteSelects();
-                document.getElementById('servicoCompraModal').style.display = 'block';
-            });
-
-            document.getElementById('servicoCompraForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const id = document.getElementById('servico-id').value;
-                const clienteId = document.getElementById('servico-cliente').value;
-                const veiculo = document.getElementById('servico-veiculo').value;
-                const orcamento = parseFloat(document.getElementById('servico-orcamento').value);
-                const taxa = parseFloat(document.getElementById('servico-taxa').value) || 0;
-                const status = document.getElementById('servico-status').value;
-                const data = document.getElementById('servico-data').value;
-                const obs = document.getElementById('servico-obs').value;
-                
-                const cliente = clientes.find(c => c.id === clienteId);
-                
-                if (id) {
-                    const index = servicoCompra.findIndex(s => s.id === id);
-                    if (index !== -1) {
-                        servicoCompra[index] = {
-                            ...servicoCompra[index],
-                            clienteId,
-                            clienteNome: cliente?.nome || '',
-                            veiculo,
-                            orcamento,
-                            taxa,
-                            status,
-                            data,
-                            obs
-                        };
-                    }
-                } else {
-                    const novoServico = {
-                        id: 'ser_' + Date.now(),
-                        clienteId,
-                        clienteNome: cliente?.nome || '',
-                        veiculo,
-                        orcamento,
-                        taxa,
-                        status,
-                        data,
-                        obs,
-                        deleted: false
-                    };
-                    servicoCompra.push(novoServico);
-                }
-                
-                localStorage.setItem('servicoCompra', JSON.stringify(servicoCompra));
-                document.getElementById('servicoCompraModal').style.display = 'none';
-                loadServicoCompra();
-                alert(id ? 'Serviço atualizado com sucesso!' : 'Serviço cadastrado com sucesso!');
-            });
-
-            document.getElementById('despesaForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const veiculoId = document.getElementById('despesa-veiculo-id').value;
-                const categoria = document.getElementById('despesa-categoria').value;
-                const valor = parseFloat(document.getElementById('despesa-valor').value);
-                const data = document.getElementById('despesa-data').value;
-                const descricao = document.getElementById('despesa-descricao').value;
-                
-                const novaDespesa = {
-                    id: 'desp_' + Date.now(),
-                    veiculoId,
-                    categoria,
-                    valor,
-                    data,
-                    descricao
-                };
-                
-                despesas.push(novaDespesa);
-                localStorage.setItem('despesas', JSON.stringify(despesas));
-                
-                document.getElementById('despesaForm').reset();
-                loadDespesasList(veiculoId);
-                loadEstoque();
-                alert('Despesa adicionada com sucesso!');
-            });
-
-            document.getElementById('searchClientes').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#clientesList tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+            } else {
+                clientes.push({
+                    id: 'cli_' + Date.now(),
+                    nome: nome,
+                    cpf: cpf,
+                    telefone: telefone,
+                    email: email,
+                    endereco: endereco,
+                    tipos: tipos,
+                    deleted: false
                 });
-            });
-
-            document.getElementById('searchEstoque').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('#estoqueList .card');
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    card.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            });
-
-            document.getElementById('searchConsignacoes').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('#consignacoesList .card');
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    card.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            });
-
-            document.getElementById('searchServicoCompra').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('#servicoCompraList .card');
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    card.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            });
-
-            document.getElementById('btnFiltrarRelatorio').addEventListener('click', function() {
-                const tipo = document.getElementById('tipoRelatorio').value;
-                const dataInicio = new Date(document.getElementById('dataInicio').value);
-                const dataFim = new Date(document.getElementById('dataFim').value);
-                
-                if (tipo === 'vendas') {
-                    gerarRelatorioVendas(dataInicio, dataFim);
-                } else if (tipo === 'compras') {
-                    gerarRelatorioCompras(dataInicio, dataFim);
-                } else if (tipo === 'estoque') {
-                    gerarRelatorioEstoque(dataInicio, dataFim);
-                }
-            });
-
-            document.getElementById('btnExportarExcel').addEventListener('click', function() {
-                if (!window.currentRelatorioData) {
-                    alert('Por favor, filtre o relatório antes de exportar.');
-                    return;
-                }
-                
-                const tipo = window.currentRelatorioType;
-                let dados = [];
-                
-                if (tipo === 'vendas') {
-                    dados = window.currentRelatorioData.map(v => {
-                        const despesas = calcularTotalDespesas(v.id);
-                        const juros = calcularJuros(v.valorCompra, v.dataCompra);
-                        const lucro = (v.valorVenda || 0) - v.valorCompra - despesas - juros;
-                        
-                        return {
-                            'Veículo': `${v.marca} ${v.modelo} ${v.ano}`,
-                            'Data Venda': new Date(v.dataVenda).toLocaleDateString('pt-BR'),
-                            'Valor Compra': v.valorCompra,
-                            'Despesas': despesas,
-                            'Juros': juros,
-                            'Valor Venda': v.valorVenda || 0,
-                            'Lucro': lucro
-                        };
-                    });
-                } else if (tipo === 'compras') {
-                    dados = window.currentRelatorioData.map(v => {
-                        const despesas = calcularTotalDespesas(v.id);
-                        
-                        return {
-                            'Veículo': `${v.marca} ${v.modelo} ${v.ano}`,
-                            'Data Compra': new Date(v.dataCompra).toLocaleDateString('pt-BR'),
-                            'Valor Compra': v.valorCompra,
-                            'Despesas': despesas,
-                            'Total Investido': v.valorCompra + despesas,
-                            'Status': v.vendido ? 'Vendido' : v.deleted ? 'Arquivado' : 'Em Estoque'
-                        };
-                    });
-                } else if (tipo === 'estoque') {
-                    dados = window.currentRelatorioData.map(v => {
-                        const despesas = calcularTotalDespesas(v.id);
-                        const juros = calcularJuros(v.valorCompra, v.dataCompra);
-                        const dias = calcularDiasEstoque(v.dataCompra);
-                        
-                        return {
-                            'Veículo': `${v.marca} ${v.modelo} ${v.ano}`,
-                            'Data Compra': new Date(v.dataCompra).toLocaleDateString('pt-BR'),
-                            'Valor Compra': v.valorCompra,
-                            'Despesas': despesas,
-                            'Juros': juros,
-                            'Dias Estoque': dias,
-                            'Total Investido': v.valorCompra + despesas + juros
-                        };
-                    });
-                }
-                
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.json_to_sheet(dados);
-                XLSX.utils.book_append_sheet(wb, ws, 'Relatório');
-                XLSX.writeFile(wb, `relatorio_${tipo}_${new Date().toISOString().split('T')[0]}.xlsx`);
-            });
-
-            document.getElementById('btnFiltrarArquivo').addEventListener('click', function() {
-                const tipo = document.getElementById('tipoArquivo').value;
-                
-                if (tipo === 'veiculos') {
-                    mostrarArquivoVeiculos();
-                } else if (tipo === 'clientes') {
-                    mostrarArquivoClientes();
-                } else if (tipo === 'consignacoes') {
-                    mostrarArquivoConsignacoes();
-                } else if (tipo === 'servico-compra') {
-                    mostrarArquivoServicoCompra();
-                }
-            });
-
-            document.getElementById('btnSalvarConfig').addEventListener('click', function() {
-                config.taxaJuros = parseFloat(document.getElementById('taxaJuros').value);
-                localStorage.setItem('config', JSON.stringify(config));
-                alert('Configurações salvas com sucesso!');
-                loadEstoque();
-                loadDashboard();
-            });
-
-            loadDashboard();
+            }
+            
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            fecharModal('clienteModal');
             loadClientes();
-        });
-
-        function loadClientes() {
-            const tbody = document.getElementById('clientesList');
-            const activeClientes = clientes.filter(c => !c.deleted);
-            
-            tbody.innerHTML = activeClientes.map(cliente => `
-                <tr>
-                    <td>${cliente.nome}</td>
-                    <td>${cliente.cpf || '-'}</td>
-                    <td>${cliente.telefone}</td>
-                    <td>${cliente.email || '-'}</td>
-                    <td>${(cliente.tipos || []).join(', ')}</td>
-                    <td>
-                        <button class="btn btn-small btn-secondary" onclick="editCliente('${cliente.id}')">Editar</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteCliente('${cliente.id}')">Deletar</button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            updateClienteSelects();
+            alert(id ? 'Cliente atualizado!' : 'Cliente cadastrado!');
         }
 
         function editCliente(id) {
-            const cliente = clientes.find(c => c.id === id);
+            var cliente = null;
+            for (var i = 0; i < clientes.length; i++) {
+                if (clientes[i].id === id) {
+                    cliente = clientes[i];
+                    break;
+                }
+            }
+            
             if (!cliente) return;
             
             document.getElementById('cliente-id').value = cliente.id;
@@ -1410,98 +1035,138 @@ try {
             document.getElementById('cliente-email').value = cliente.email || '';
             document.getElementById('cliente-endereco').value = cliente.endereco || '';
             
-            document.getElementById('cliente-tipo-comprador').checked = (cliente.tipos || []).includes('Comprador');
-            document.getElementById('cliente-tipo-vendedor').checked = (cliente.tipos || []).includes('Vendedor');
-            document.getElementById('cliente-tipo-fornecedor').checked = (cliente.tipos || []).includes('Fornecedor');
+            document.getElementById('cliente-tipo-comprador').checked = cliente.tipos.indexOf('Comprador') > -1;
+            document.getElementById('cliente-tipo-vendedor').checked = cliente.tipos.indexOf('Vendedor') > -1;
+            document.getElementById('cliente-tipo-fornecedor').checked = cliente.tipos.indexOf('Fornecedor') > -1;
             
             document.getElementById('clienteModal').style.display = 'block';
         }
 
         function deleteCliente(id) {
-            if (confirm('Deseja realmente mover este cliente para o arquivo morto?')) {
-                const index = clientes.findIndex(c => c.id === id);
-                if (index !== -1) {
-                    clientes[index].deleted = true;
-                    clientes[index].deletedAt = new Date().toISOString();
-                    localStorage.setItem('clientes', JSON.stringify(clientes));
-                    loadClientes();
+            if (confirm('Mover para arquivo morto?')) {
+                for (var i = 0; i < clientes.length; i++) {
+                    if (clientes[i].id === id) {
+                        clientes[i].deleted = true;
+                        clientes[i].deletedAt = new Date().toISOString();
+                        break;
+                    }
                 }
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+                loadClientes();
             }
         }
 
-        function updateClienteSelects() {
-            const activeClientes = clientes.filter(c => !c.deleted);
-            const options = activeClientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        function loadClientes() {
+            var tbody = document.getElementById('clientesList');
+            var html = '';
             
-            document.getElementById('consignacao-cliente').innerHTML = '<option value="">Selecione...</option>' + options;
-            document.getElementById('servico-cliente').innerHTML = '<option value="">Selecione...</option>' + options;
+            for (var i = 0; i < clientes.length; i++) {
+                if (!clientes[i].deleted) {
+                    html += '<tr>';
+                    html += '<td>' + clientes[i].nome + '</td>';
+                    html += '<td>' + (clientes[i].cpf || '-') + '</td>';
+                    html += '<td>' + clientes[i].telefone + '</td>';
+                    html += '<td>' + (clientes[i].email || '-') + '</td>';
+                    html += '<td>' + clientes[i].tipos.join(', ') + '</td>';
+                    html += '<td>';
+                    html += '<button class="btn btn-small btn-secondary" onclick="editCliente(\'' + clientes[i].id + '\')">Editar</button>';
+                    html += '<button class="btn btn-small btn-danger" onclick="deleteCliente(\'' + clientes[i].id + '\')">Deletar</button>';
+                    html += '</td>';
+                    html += '</tr>';
+                }
+            }
+            
+            tbody.innerHTML = html;
+            updateClienteSelects();
         }
 
-        function loadEstoque() {
-    try {
-        // Recarregar do localStorage
-        const storedVeiculos = localStorage.getItem('veiculos');
-        if (storedVeiculos) {
-            veiculos = JSON.parse(storedVeiculos);
+        function updateClienteSelects() {
+            var options = '<option value="">Selecione...</option>';
+            for (var i = 0; i < clientes.length; i++) {
+                if (!clientes[i].deleted) {
+                    options += '<option value="' + clientes[i].id + '">' + clientes[i].nome + '</option>';
+                }
+            }
+            document.getElementById('consignacao-cliente').innerHTML = options;
+            document.getElementById('servico-cliente').innerHTML = options;
         }
-        
-        const container = document.getElementById('estoqueList');
-        if (!container) {
-            console.error('Container estoqueList não encontrado');
-            return;
+
+        function abrirModalVeiculo() {
+            document.getElementById('veiculo-id').value = '';
+            document.getElementById('veiculo-marca').value = '';
+            document.getElementById('veiculo-modelo').value = '';
+            document.getElementById('veiculo-ano').value = '';
+            document.getElementById('veiculo-placa').value = '';
+            document.getElementById('veiculo-cor').value = '';
+            document.getElementById('veiculo-valor-compra').value = '';
+            document.getElementById('veiculo-valor-venda').value = '';
+            document.getElementById('veiculo-data-compra').value = '';
+            document.getElementById('veiculo-obs').value = '';
+            document.getElementById('veiculoModal').style.display = 'block';
         }
-        
-        const activeVeiculos = veiculos.filter(v => !v.deleted && !v.vendido);
-        
-        console.log('=== DEBUG ESTOQUE ===');
-        console.log('Total veículos:', veiculos.length);
-        console.log('Veículos ativos:', activeVeiculos.length);
-        console.log('Dados completos:', veiculos);
-        console.log('====================');
-        
-        if (activeVeiculos.length === 0) {
-            container.innerHTML = '<p style="text-align: center; padding: 40px; color: #999; font-size: 18px;">Nenhum veículo cadastrado no estoque.<br><br>Clique em "+ Adicionar Veículo" para começar.</p>';
-            return;
-        }
-        
-        container.innerHTML = activeVeiculos.map(veiculo => {
-            const diasEstoque = calcularDiasEstoque(veiculo.dataCompra);
-            const alertClass = diasEstoque > 60 ? 'alert-danger' : diasEstoque > 30 ? 'alert-warning' : '';
-            const badge = diasEstoque > 60 ? '<span class="badge badge-danger">+60 dias</span>' : 
-                          diasEstoque > 30 ? '<span class="badge badge-warning">+30 dias</span>' : '';
+
+        function salvarVeiculo(event) {
+            event.preventDefault();
             
-            const totalDespesas = calcularTotalDespesas(veiculo.id);
-            const jurosAcumulados = calcularJuros(veiculo.valorCompra, veiculo.dataCompra);
+            var id = document.getElementById('veiculo-id').value;
+            var marca = document.getElementById('veiculo-marca').value;
+            var modelo = document.getElementById('veiculo-modelo').value;
+            var ano = document.getElementById('veiculo-ano').value;
+            var placa = document.getElementById('veiculo-placa').value;
+            var cor = document.getElementById('veiculo-cor').value;
+            var valorCompra = parseFloat(document.getElementById('veiculo-valor-compra').value);
+            var valorVenda = parseFloat(document.getElementById('veiculo-valor-venda').value) || 0;
+            var dataCompra = document.getElementById('veiculo-data-compra').value;
+            var obs = document.getElementById('veiculo-obs').value;
             
-            return `
-                <div class="card ${alertClass}">
-                    <div class="card-title">${veiculo.marca} ${veiculo.modelo} ${badge}</div>
-                    <div class="card-info"><strong>Ano:</strong> ${veiculo.ano}</div>
-                    <div class="card-info"><strong>Placa:</strong> ${veiculo.placa || '-'}</div>
-                    <div class="card-info"><strong>Cor:</strong> ${veiculo.cor || '-'}</div>
-                    <div class="card-info"><strong>Valor Compra:</strong> R$ ${veiculo.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Despesas:</strong> R$ ${totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Juros:</strong> R$ ${jurosAcumulados.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Dias em Estoque:</strong> ${diasEstoque}</div>
-                    <div class="card-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editVeiculo('${veiculo.id}')">Editar</button>
-                        <button class="btn btn-small btn-success" onclick="openDespesas('${veiculo.id}')">💰 Despesas</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteVeiculo('${veiculo.id}')">Deletar</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        console.log('Estoque renderizado com sucesso!');
-        
-    } catch (error) {
-        console.error('ERRO em loadEstoque:', error);
-        alert('Erro ao carregar estoque: ' + error.message);
-    }
-}        }
+            if (id) {
+                for (var i = 0; i < veiculos.length; i++) {
+                    if (veiculos[i].id === id) {
+                        veiculos[i].marca = marca;
+                        veiculos[i].modelo = modelo;
+                        veiculos[i].ano = ano;
+                        veiculos[i].placa = placa;
+                        veiculos[i].cor = cor;
+                        veiculos[i].valorCompra = valorCompra;
+                        veiculos[i].valorVenda = valorVenda;
+                        veiculos[i].dataCompra = dataCompra;
+                        veiculos[i].obs = obs;
+                        break;
+                    }
+                }
+            } else {
+                veiculos.push({
+                    id: 'vei_' + Date.now(),
+                    marca: marca,
+                    modelo: modelo,
+                    ano: ano,
+                    placa: placa,
+                    cor: cor,
+                    valorCompra: valorCompra,
+                    valorVenda: valorVenda,
+                    dataCompra: dataCompra,
+                    obs: obs,
+                    deleted: false,
+                    vendido: false
+                });
+            }
+            
+            localStorage.setItem('veiculos', JSON.stringify(veiculos));
+            fecharModal('veiculoModal');
+            loadEstoque();
+            loadDashboard();
+            alert(id ? 'Veículo atualizado!' : 'Veículo cadastrado!');
+        }
 
         function editVeiculo(id) {
-            const veiculo = veiculos.find(v => v.id === id);
+            var veiculo = null;
+            for (var i = 0; i < veiculos.length; i++) {
+                if (veiculos[i].id === id) {
+                    veiculo = veiculos[i];
+                    break;
+                }
+            }
+            
             if (!veiculo) return;
             
             document.getElementById('veiculo-id').value = veiculo.id;
@@ -1519,71 +1184,236 @@ try {
         }
 
         function deleteVeiculo(id) {
-            if (confirm('Deseja realmente mover este veículo para o arquivo morto?')) {
-                const index = veiculos.findIndex(v => v.id === id);
-                if (index !== -1) {
-                    veiculos[index].deleted = true;
-                    veiculos[index].deletedAt = new Date().toISOString();
-                    localStorage.setItem('veiculos', JSON.stringify(veiculos));
-                    loadEstoque();
+            if (confirm('Mover para arquivo morto?')) {
+                for (var i = 0; i < veiculos.length; i++) {
+                    if (veiculos[i].id === id) {
+                        veiculos[i].deleted = true;
+                        veiculos[i].deletedAt = new Date().toISOString();
+                        break;
+                    }
                 }
+                localStorage.setItem('veiculos', JSON.stringify(veiculos));
+                loadEstoque();
+                loadDashboard();
             }
         }
 
         function openDespesas(veiculoId) {
             document.getElementById('despesa-veiculo-id').value = veiculoId;
-            document.getElementById('despesaForm').reset();
+            document.getElementById('despesa-categoria').value = '';
+            document.getElementById('despesa-valor').value = '';
+            document.getElementById('despesa-data').value = '';
+            document.getElementById('despesa-descricao').value = '';
             loadDespesasList(veiculoId);
             document.getElementById('despesasModal').style.display = 'block';
         }
 
+        function salvarDespesa(event) {
+            event.preventDefault();
+            
+            var veiculoId = document.getElementById('despesa-veiculo-id').value;
+            var categoria = document.getElementById('despesa-categoria').value;
+            var valor = parseFloat(document.getElementById('despesa-valor').value);
+            var data = document.getElementById('despesa-data').value;
+            var descricao = document.getElementById('despesa-descricao').value;
+            
+            despesas.push({
+                id: 'desp_' + Date.now(),
+                veiculoId: veiculoId,
+                categoria: categoria,
+                valor: valor,
+                data: data,
+                descricao: descricao
+            });
+            
+            localStorage.setItem('despesas', JSON.stringify(despesas));
+            
+            document.getElementById('despesa-categoria').value = '';
+            document.getElementById('despesa-valor').value = '';
+            document.getElementById('despesa-data').value = '';
+            document.getElementById('despesa-descricao').value = '';
+            
+            loadDespesasList(veiculoId);
+            loadEstoque();
+            alert('Despesa adicionada!');
+        }
+
         function loadDespesasList(veiculoId) {
-            const container = document.getElementById('despesasList');
-            const despesasVeiculo = despesas.filter(d => d.veiculoId === veiculoId);
+            var container = document.getElementById('despesasList');
+            var despesasVeiculo = [];
+            
+            for (var i = 0; i < despesas.length; i++) {
+                if (despesas[i].veiculoId === veiculoId) {
+                    despesasVeiculo.push(despesas[i]);
+                }
+            }
             
             if (despesasVeiculo.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Nenhuma despesa cadastrada</p>';
+                container.innerHTML = '<p style="text-align:center;padding:20px;color:#999;">Nenhuma despesa cadastrada</p>';
                 return;
             }
             
-            const total = despesasVeiculo.reduce((sum, d) => sum + d.valor, 0);
+            var total = 0;
+            for (var i = 0; i < despesasVeiculo.length; i++) {
+                total += despesasVeiculo[i].valor;
+            }
             
-            container.innerHTML = `
-                <h4 style="margin-bottom: 15px;">Total de Despesas: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
-                ${despesasVeiculo.map(desp => `
-                    <div class="despesa-item">
-                        <div>
-                            <strong>${desp.categoria}</strong><br>
-                            <small>${new Date(desp.data).toLocaleDateString('pt-BR')} - ${desp.descricao || 'Sem descrição'}</small>
-                        </div>
-                        <div class="valor">R$ ${desp.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    </div>
-                `).join('')}
-            `;
+            var html = '<h4 style="margin-bottom:15px;">Total: R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</h4>';
+            
+            for (var i = 0; i < despesasVeiculo.length; i++) {
+                var d = despesasVeiculo[i];
+                html += '<div class="despesa-item">';
+                html += '<div><strong>' + d.categoria + '</strong><br><small>' + new Date(d.data).toLocaleDateString('pt-BR') + ' - ' + (d.descricao || 'Sem descrição') + '</small></div>';
+                html += '<div class="valor">R$ ' + d.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
         }
 
-        function loadConsignacoes() {
-            const container = document.getElementById('consignacoesList');
-            const activeConsignacoes = consignacoes.filter(c => !c.deleted);
+        function calcularDiasEstoque(dataCompra) {
+            var hoje = new Date();
+            var compra = new Date(dataCompra);
+            var diff = hoje - compra;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function calcularJuros(valorCompra, dataCompra) {
+            var meses = calcularDiasEstoque(dataCompra) / 30;
+            var taxa = config.taxaJuros / 100;
+            return valorCompra * taxa * meses;
+        }
+
+        function calcularTotalDespesas(veiculoId) {
+            var total = 0;
+            for (var i = 0; i < despesas.length; i++) {
+                if (despesas[i].veiculoId === veiculoId) {
+                    total += despesas[i].valor;
+                }
+            }
+            return total;
+        }
+
+        function loadEstoque() {
+            carregarDados();
             
-            container.innerHTML = activeConsignacoes.map(cons => `
-                <div class="card">
-                    <div class="card-title">${cons.veiculo}</div>
-                    <div class="card-info"><strong>Cliente:</strong> ${cons.clienteNome}</div>
-                    <div class="card-info"><strong>Placa:</strong> ${cons.placa || '-'}</div>
-                    <div class="card-info"><strong>Valor Mínimo:</strong> R$ ${cons.valorMinimo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Comissão:</strong> ${cons.comissao}%</div>
-                    <div class="card-info"><strong>Data:</strong> ${new Date(cons.data).toLocaleDateString('pt-BR')}</div>
-                    <div class="card-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editConsignacao('${cons.id}')">Editar</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteConsignacao('${cons.id}')">Deletar</button>
-                    </div>
-                </div>
-            `).join('');
+            var container = document.getElementById('estoqueList');
+            var html = '';
+            
+            var count = 0;
+            for (var i = 0; i < veiculos.length; i++) {
+                if (!veiculos[i].deleted && !veiculos[i].vendido) {
+                    var v = veiculos[i];
+                    var dias = calcularDiasEstoque(v.dataCompra);
+                    var alertClass = dias > 60 ? 'alert-danger' : dias > 30 ? 'alert-warning' : '';
+                    var badge = dias > 60 ? '<span class="badge badge-danger">+60 dias</span>' : dias > 30 ? '<span class="badge badge-warning">+30 dias</span>' : '';
+                    var totalDespesas = calcularTotalDespesas(v.id);
+                    var juros = calcularJuros(v.valorCompra, v.dataCompra);
+                    
+                    html += '<div class="card ' + alertClass + '">';
+                    html += '<div class="card-title">' + v.marca + ' ' + v.modelo + ' ' + badge + '</div>';
+                    html += '<div class="card-info"><strong>Ano:</strong> ' + v.ano + '</div>';
+                    html += '<div class="card-info"><strong>Placa:</strong> ' + (v.placa || '-') + '</div>';
+                    html += '<div class="card-info"><strong>Cor:</strong> ' + (v.cor || '-') + '</div>';
+                    html += '<div class="card-info"><strong>Valor Compra:</strong> R$ ' + v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Despesas:</strong> R$ ' + totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Juros:</strong> R$ ' + juros.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Dias em Estoque:</strong> ' + dias + '</div>';
+                    html += '<div class="card-actions">';
+                    html += '<button class="btn btn-small btn-secondary" onclick="editVeiculo(\'' + v.id + '\')">Editar</button>';
+                    html += '<button class="btn btn-small btn-success" onclick="openDespesas(\'' + v.id + '\')">💰 Despesas</button>';
+                    html += '<button class="btn btn-small btn-danger" onclick="deleteVeiculo(\'' + v.id + '\')">Deletar</button>';
+                    html += '</div></div>';
+                    
+                    count++;
+                }
+            }
+            
+            if (count === 0) {
+                html = '<p style="text-align:center;padding:40px;color:#999;font-size:18px;">Nenhum veículo no estoque<br><br>Clique em "+ Adicionar Veículo" para começar</p>';
+            }
+            
+            container.innerHTML = html;
+            console.log('Estoque carregado: ' + count + ' veículos');
+        }
+
+        function abrirModalConsignacao() {
+            updateClienteSelects();
+            document.getElementById('consignacao-id').value = '';
+            document.getElementById('consignacao-cliente').value = '';
+            document.getElementById('consignacao-veiculo').value = '';
+            document.getElementById('consignacao-placa').value = '';
+            document.getElementById('consignacao-valor-minimo').value = '';
+            document.getElementById('consignacao-comissao').value = '10';
+            document.getElementById('consignacao-data').value = '';
+            document.getElementById('consignacao-obs').value = '';
+            document.getElementById('consignacaoModal').style.display = 'block';
+        }
+
+        function salvarConsignacao(event) {
+            event.preventDefault();
+            
+            var id = document.getElementById('consignacao-id').value;
+            var clienteId = document.getElementById('consignacao-cliente').value;
+            var veiculo = document.getElementById('consignacao-veiculo').value;
+            var placa = document.getElementById('consignacao-placa').value;
+            var valorMinimo = parseFloat(document.getElementById('consignacao-valor-minimo').value);
+            var comissao = parseFloat(document.getElementById('consignacao-comissao').value);
+            var data = document.getElementById('consignacao-data').value;
+            var obs = document.getElementById('consignacao-obs').value;
+            
+            var clienteNome = '';
+            for (var i = 0; i < clientes.length; i++) {
+                if (clientes[i].id === clienteId) {
+                    clienteNome = clientes[i].nome;
+                    break;
+                }
+            }
+            
+            if (id) {
+                for (var i = 0; i < consignacoes.length; i++) {
+                    if (consignacoes[i].id === id) {
+                        consignacoes[i].clienteId = clienteId;
+                        consignacoes[i].clienteNome = clienteNome;
+                        consignacoes[i].veiculo = veiculo;
+                        consignacoes[i].placa = placa;
+                        consignacoes[i].valorMinimo = valorMinimo;
+                        consignacoes[i].comissao = comissao;
+                        consignacoes[i].data = data;
+                        consignacoes[i].obs = obs;
+                        break;
+                    }
+                }
+            } else {
+                consignacoes.push({
+                    id: 'con_' + Date.now(),
+                    clienteId: clienteId,
+                    clienteNome: clienteNome,
+                    veiculo: veiculo,
+                    placa: placa,
+                    valorMinimo: valorMinimo,
+                    comissao: comissao,
+                    data: data,
+                    obs: obs,
+                    deleted: false
+                });
+            }
+            
+            localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
+            fecharModal('consignacaoModal');
+            loadConsignacoes();
+            alert(id ? 'Consignação atualizada!' : 'Consignação cadastrada!');
         }
 
         function editConsignacao(id) {
-            const cons = consignacoes.find(c => c.id === id);
+            var cons = null;
+            for (var i = 0; i < consignacoes.length; i++) {
+                if (consignacoes[i].id === id) {
+                    cons = consignacoes[i];
+                    break;
+                }
+            }
+            
             if (!cons) return;
             
             updateClienteSelects();
@@ -1600,38 +1430,120 @@ try {
         }
 
         function deleteConsignacao(id) {
-            if (confirm('Deseja realmente mover esta consignação para o arquivo morto?')) {
-                const index = consignacoes.findIndex(c => c.id === id);
-                if (index !== -1) {
-                    consignacoes[index].deleted = true;
-                    consignacoes[index].deletedAt = new Date().toISOString();
-                    localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
-                    loadConsignacoes();
+            if (confirm('Mover para arquivo morto?')) {
+                for (var i = 0; i < consignacoes.length; i++) {
+                    if (consignacoes[i].id === id) {
+                        consignacoes[i].deleted = true;
+                        consignacoes[i].deletedAt = new Date().toISOString();
+                        break;
+                    }
                 }
+                localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
+                loadConsignacoes();
             }
         }
 
-        function loadServicoCompra() {
-            const container = document.getElementById('servicoCompraList');
-            const activeServicos = servicoCompra.filter(s => !s.deleted);
+        function loadConsignacoes() {
+            var container = document.getElementById('consignacoesList');
+            var html = '';
             
-            container.innerHTML = activeServicos.map(serv => `
-                <div class="card">
-                    <div class="card-title">${serv.veiculo} <span class="badge badge-success">${serv.status}</span></div>
-                    <div class="card-info"><strong>Cliente:</strong> ${serv.clienteNome}</div>
-                    <div class="card-info"><strong>Orçamento:</strong> R$ ${serv.orcamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Taxa:</strong> R$ ${serv.taxa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    <div class="card-info"><strong>Data:</strong> ${new Date(serv.data).toLocaleDateString('pt-BR')}</div>
-                    <div class="card-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editServicoCompra('${serv.id}')">Editar</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteServicoCompra('${serv.id}')">Deletar</button>
-                    </div>
-                </div>
-            `).join('');
+            for (var i = 0; i < consignacoes.length; i++) {
+                if (!consignacoes[i].deleted) {
+                    var c = consignacoes[i];
+                    html += '<div class="card">';
+                    html += '<div class="card-title">' + c.veiculo + '</div>';
+                    html += '<div class="card-info"><strong>Cliente:</strong> ' + c.clienteNome + '</div>';
+                    html += '<div class="card-info"><strong>Placa:</strong> ' + (c.placa || '-') + '</div>';
+                    html += '<div class="card-info"><strong>Valor Mínimo:</strong> R$ ' + c.valorMinimo.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Comissão:</strong> ' + c.comissao + '%</div>';
+                    html += '<div class="card-info"><strong>Data:</strong> ' + new Date(c.data).toLocaleDateString('pt-BR') + '</div>';
+                    html += '<div class="card-actions">';
+                    html += '<button class="btn btn-small btn-secondary" onclick="editConsignacao(\'' + c.id + '\')">Editar</button>';
+                    html += '<button class="btn btn-small btn-danger" onclick="deleteConsignacao(\'' + c.id + '\')">Deletar</button>';
+                    html += '</div></div>';
+                }
+            }
+            
+            container.innerHTML = html || '<p style="text-align:center;padding:40px;color:#999;">Nenhuma consignação cadastrada</p>';
+        }
+
+        function abrirModalServicoCompra() {
+            updateClienteSelects();
+            document.getElementById('servico-id').value = '';
+            document.getElementById('servico-cliente').value = '';
+            document.getElementById('servico-veiculo').value = '';
+            document.getElementById('servico-orcamento').value = '';
+            document.getElementById('servico-taxa').value = '';
+            document.getElementById('servico-status').value = 'Em Andamento';
+            document.getElementById('servico-data').value = '';
+            document.getElementById('servico-obs').value = '';
+            document.getElementById('servicoCompraModal').style.display = 'block';
+        }
+
+        function salvarServicoCompra(event) {
+            event.preventDefault();
+            
+            var id = document.getElementById('servico-id').value;
+            var clienteId = document.getElementById('servico-cliente').value;
+            var veiculo = document.getElementById('servico-veiculo').value;
+            var orcamento = parseFloat(document.getElementById('servico-orcamento').value);
+            var taxa = parseFloat(document.getElementById('servico-taxa').value) || 0;
+            var status = document.getElementById('servico-status').value;
+            var data = document.getElementById('servico-data').value;
+            var obs = document.getElementById('servico-obs').value;
+            
+            var clienteNome = '';
+            for (var i = 0; i < clientes.length; i++) {
+                if (clientes[i].id === clienteId) {
+                    clienteNome = clientes[i].nome;
+                    break;
+                }
+            }
+            
+            if (id) {
+                for (var i = 0; i < servicoCompra.length; i++) {
+                    if (servicoCompra[i].id === id) {
+                        servicoCompra[i].clienteId = clienteId;
+                        servicoCompra[i].clienteNome = clienteNome;
+                        servicoCompra[i].veiculo = veiculo;
+                        servicoCompra[i].orcamento = orcamento;
+                        servicoCompra[i].taxa = taxa;
+                        servicoCompra[i].status = status;
+                        servicoCompra[i].data = data;
+                        servicoCompra[i].obs = obs;
+                        break;
+                    }
+                }
+            } else {
+                servicoCompra.push({
+                    id: 'ser_' + Date.now(),
+                    clienteId: clienteId,
+                    clienteNome: clienteNome,
+                    veiculo: veiculo,
+                    orcamento: orcamento,
+                    taxa: taxa,
+                    status: status,
+                    data: data,
+                    obs: obs,
+                    deleted: false
+                });
+            }
+            
+            localStorage.setItem('servicoCompra', JSON.stringify(servicoCompra));
+            fecharModal('servicoCompraModal');
+            loadServicoCompra();
+            alert(id ? 'Serviço atualizado!' : 'Serviço cadastrado!');
         }
 
         function editServicoCompra(id) {
-            const serv = servicoCompra.find(s => s.id === id);
+            var serv = null;
+            for (var i = 0; i < servicoCompra.length; i++) {
+                if (servicoCompra[i].id === id) {
+                    serv = servicoCompra[i];
+                    break;
+                }
+            }
+            
             if (!serv) return;
             
             updateClienteSelects();
@@ -1648,94 +1560,120 @@ try {
         }
 
         function deleteServicoCompra(id) {
-            if (confirm('Deseja realmente mover este serviço para o arquivo morto?')) {
-                const index = servicoCompra.findIndex(s => s.id === id);
-                if (index !== -1) {
-                    servicoCompra[index].deleted = true;
-                    servicoCompra[index].deletedAt = new Date().toISOString();
-                    localStorage.setItem('servicoCompra', JSON.stringify(servicoCompra));
-                    loadServicoCompra();
+            if (confirm('Mover para arquivo morto?')) {
+                for (var i = 0; i < servicoCompra.length; i++) {
+                    if (servicoCompra[i].id === id) {
+                        servicoCompra[i].deleted = true;
+                        servicoCompra[i].deletedAt = new Date().toISOString();
+                        break;
+                    }
                 }
+                localStorage.setItem('servicoCompra', JSON.stringify(servicoCompra));
+                loadServicoCompra();
             }
         }
 
-        function calcularDiasEstoque(dataCompra) {
-            const hoje = new Date();
-            const compra = new Date(dataCompra);
-            const diff = hoje - compra;
-            return Math.floor(diff / (1000 * 60 * 60 * 24));
-        }
-
-        function calcularJuros(valorCompra, dataCompra) {
-            const meses = calcularDiasEstoque(dataCompra) / 30;
-            const taxa = config.taxaJuros / 100;
-            return valorCompra * taxa * meses;
-        }
-
-        function calcularTotalDespesas(veiculoId) {
-            const despesasVeiculo = despesas.filter(d => d.veiculoId === veiculoId);
-            return despesasVeiculo.reduce((total, d) => total + d.valor, 0);
+        function loadServicoCompra() {
+            var container = document.getElementById('servicoCompraList');
+            var html = '';
+            
+            for (var i = 0; i < servicoCompra.length; i++) {
+                if (!servicoCompra[i].deleted) {
+                    var s = servicoCompra[i];
+                    html += '<div class="card">';
+                    html += '<div class="card-title">' + s.veiculo + ' <span class="badge badge-success">' + s.status + '</span></div>';
+                    html += '<div class="card-info"><strong>Cliente:</strong> ' + s.clienteNome + '</div>';
+                    html += '<div class="card-info"><strong>Orçamento:</strong> R$ ' + s.orcamento.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Taxa:</strong> R$ ' + s.taxa.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</div>';
+                    html += '<div class="card-info"><strong>Data:</strong> ' + new Date(s.data).toLocaleDateString('pt-BR') + '</div>';
+                    html += '<div class="card-actions">';
+                    html += '<button class="btn btn-small btn-secondary" onclick="editServicoCompra(\'' + s.id + '\')">Editar</button>';
+                    html += '<button class="btn btn-small btn-danger" onclick="deleteServicoCompra(\'' + s.id + '\')">Deletar</button>';
+                    html += '</div></div>';
+                }
+            }
+            
+            container.innerHTML = html || '<p style="text-align:center;padding:40px;color:#999;">Nenhum serviço cadastrado</p>';
         }
 
         function loadDashboard() {
-            const activeVeiculos = veiculos.filter(v => !v.deleted && !v.vendido);
-            const activeClientes = clientes.filter(c => !c.deleted);
-            const activeConsignacoes = consignacoes.filter(c => !c.deleted);
+            carregarDados();
             
-            const valorTotalEstoque = activeVeiculos.reduce((total, v) => total + v.valorCompra, 0);
+            var countVeiculos = 0;
+            var valorTotal = 0;
+            for (var i = 0; i < veiculos.length; i++) {
+                if (!veiculos[i].deleted && !veiculos[i].vendido) {
+                    countVeiculos++;
+                    valorTotal += veiculos[i].valorCompra;
+                }
+            }
             
-            document.getElementById('stat-estoque').textContent = activeVeiculos.length;
-            document.getElementById('stat-clientes').textContent = activeClientes.length;
-            document.getElementById('stat-consignacoes').textContent = activeConsignacoes.length;
-            document.getElementById('stat-valor-estoque').textContent = `R$ ${valorTotalEstoque.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            var countClientes = 0;
+            for (var i = 0; i < clientes.length; i++) {
+                if (!clientes[i].deleted) countClientes++;
+            }
             
-            const marcasCount = {};
-            activeVeiculos.forEach(v => {
-                marcasCount[v.marca] = (marcasCount[v.marca] || 0) + 1;
-            });
+            var countConsignacoes = 0;
+            for (var i = 0; i < consignacoes.length; i++) {
+                if (!consignacoes[i].deleted) countConsignacoes++;
+            }
             
-            const ctxMarcas = document.getElementById('chartMarcas');
-            if (ctxMarcas) {
+            document.getElementById('stat-estoque').textContent = countVeiculos;
+            document.getElementById('stat-clientes').textContent = countClientes;
+            document.getElementById('stat-consignacoes').textContent = countConsignacoes;
+            document.getElementById('stat-valor-estoque').textContent = 'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            
+            var marcasCount = {};
+            for (var i = 0; i < veiculos.length; i++) {
+                if (!veiculos[i].deleted && !veiculos[i].vendido) {
+                    var marca = veiculos[i].marca;
+                    marcasCount[marca] = (marcasCount[marca] || 0) + 1;
+                }
+            }
+            
+            var marcasLabels = Object.keys(marcasCount);
+            var marcasData = Object.values(marcasCount);
+            
+            var ctx1 = document.getElementById('chartMarcas');
+            if (ctx1) {
                 if (window.chartMarcas) window.chartMarcas.destroy();
-                window.chartMarcas = new Chart(ctxMarcas, {
+                window.chartMarcas = new Chart(ctx1, {
                     type: 'bar',
                     data: {
-                        labels: Object.keys(marcasCount),
+                        labels: marcasLabels,
                         datasets: [{
                             label: 'Quantidade',
-                            data: Object.values(marcasCount),
+                            data: marcasData,
                             backgroundColor: '#ffd700'
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: true,
-                        plugins: {
-                            legend: { display: false }
-                        }
+                        plugins: { legend: { display: false } }
                     }
                 });
             }
             
-            const tempoLabels = ['0-30 dias', '31-60 dias', '60+ dias'];
-            const tempoData = [0, 0, 0];
+            var tempo = [0, 0, 0];
+            for (var i = 0; i < veiculos.length; i++) {
+                if (!veiculos[i].deleted && !veiculos[i].vendido) {
+                    var dias = calcularDiasEstoque(veiculos[i].dataCompra);
+                    if (dias <= 30) tempo[0]++;
+                    else if (dias <= 60) tempo[1]++;
+                    else tempo[2]++;
+                }
+            }
             
-            activeVeiculos.forEach(v => {
-                const dias = calcularDiasEstoque(v.dataCompra);
-                if (dias <= 30) tempoData[0]++;
-                else if (dias <= 60) tempoData[1]++;
-                else tempoData[2]++;
-            });
-            
-            const ctxTempo = document.getElementById('chartTempo');
-            if (ctxTempo) {
+            var ctx2 = document.getElementById('chartTempo');
+            if (ctx2) {
                 if (window.chartTempo) window.chartTempo.destroy();
-                window.chartTempo = new Chart(ctxTempo, {
+                window.chartTempo = new Chart(ctx2, {
                     type: 'pie',
                     data: {
-                        labels: tempoLabels,
+                        labels: ['0-30 dias', '31-60 dias', '60+ dias'],
                         datasets: [{
-                            data: tempoData,
+                            data: tempo,
                             backgroundColor: ['#28a745', '#ffc107', '#dc3545']
                         }]
                     },
@@ -1748,437 +1686,147 @@ try {
         }
 
         function loadRelatorios() {
-            const hoje = new Date();
-            const umMesAtras = new Date(hoje);
+            var hoje = new Date();
+            var umMesAtras = new Date(hoje);
             umMesAtras.setMonth(umMesAtras.getMonth() - 1);
             
             document.getElementById('dataInicio').value = umMesAtras.toISOString().split('T')[0];
             document.getElementById('dataFim').value = hoje.toISOString().split('T')[0];
         }
 
-        function gerarRelatorioVendas(dataInicio, dataFim) {
-            const veiculosVendidos = veiculos.filter(v => {
-                if (!v.vendido || !v.dataVenda) return false;
-                const dataVenda = new Date(v.dataVenda);
-                return dataVenda >= dataInicio && dataVenda <= dataFim;
-            });
-            
-            const totalVendas = veiculosVendidos.length;
-            const valorTotal = veiculosVendidos.reduce((sum, v) => sum + (v.valorVenda || 0), 0);
-            const lucroTotal = veiculosVendidos.reduce((sum, v) => {
-                const despesasVeiculo = calcularTotalDespesas(v.id);
-                const juros = calcularJuros(v.valorCompra, v.dataCompra);
-                return sum + ((v.valorVenda || 0) - v.valorCompra - despesasVeiculo - juros);
-            }, 0);
-            
-            document.getElementById('relatorioStats').innerHTML = `
-                <div class="stat-card">
-                    <h3>Total de Vendas</h3>
-                    <div class="value">${totalVendas}</div>
-                </div>
-                <div class="stat-card gold">
-                    <h3>Valor Total</h3>
-                    <div class="value">R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Lucro Total</h3>
-                    <div class="value">R$ ${lucroTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-            `;
-            
-            const vendasPorMes = {};
-            veiculosVendidos.forEach(v => {
-                const mes = new Date(v.dataVenda).toLocaleDateString('pt-BR', {month: 'short', year: 'numeric'});
-                vendasPorMes[mes] = (vendasPorMes[mes] || 0) + (v.valorVenda || 0);
-            });
-            
-            const ctx = document.getElementById('chartRelatorio');
-            if (ctx) {
-                if (window.chartRelatorio) window.chartRelatorio.destroy();
-                window.chartRelatorio = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: Object.keys(vendasPorMes),
-                        datasets: [{
-                            label: 'Vendas (R$)',
-                            data: Object.values(vendasPorMes),
-                            borderColor: '#ffd700',
-                            backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true
-                    }
-                });
-            }
-            
-            document.getElementById('relatorioTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Data Venda</th>
-                    <th>Valor Compra</th>
-                    <th>Despesas</th>
-                    <th>Juros</th>
-                    <th>Valor Venda</th>
-                    <th>Lucro</th>
-                </tr>
-            `;
-            
-            document.getElementById('relatorioTableBody').innerHTML = veiculosVendidos.map(v => {
-                const despesas = calcularTotalDespesas(v.id);
-                const juros = calcularJuros(v.valorCompra, v.dataCompra);
-                const lucro = (v.valorVenda || 0) - v.valorCompra - despesas - juros;
-                
-                return `
-                    <tr>
-                        <td>${v.marca} ${v.modelo} ${v.ano}</td>
-                        <td>${new Date(v.dataVenda).toLocaleDateString('pt-BR')}</td>
-                        <td>R$ ${v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${juros.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${(v.valorVenda || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    </tr>
-                `;
-            }).join('');
-            
-            window.currentRelatorioData = veiculosVendidos;
-            window.currentRelatorioType = 'vendas';
+        function filtrarRelatorio() {
+            alert('Função de relatórios em desenvolvimento');
         }
 
-        function gerarRelatorioCompras(dataInicio, dataFim) {
-            const veiculosComprados = veiculos.filter(v => {
-                const dataCompra = new Date(v.dataCompra);
-                return dataCompra >= dataInicio && dataCompra <= dataFim;
-            });
-            
-            const totalCompras = veiculosComprados.length;
-            const valorTotal = veiculosComprados.reduce((sum, v) => sum + v.valorCompra, 0);
-            const despesasTotal = veiculosComprados.reduce((sum, v) => sum + calcularTotalDespesas(v.id), 0);
-            
-            document.getElementById('relatorioStats').innerHTML = `
-                <div class="stat-card">
-                    <h3>Total de Compras</h3>
-                    <div class="value">${totalCompras}</div>
-                </div>
-                <div class="stat-card gold">
-                    <h3>Valor Investido</h3>
-                    <div class="value">R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Despesas</h3>
-                    <div class="value">R$ ${despesasTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-            `;
-            
-            const comprasPorMes = {};
-            veiculosComprados.forEach(v => {
-                const mes = new Date(v.dataCompra).toLocaleDateString('pt-BR', {month: 'short', year: 'numeric'});
-                comprasPorMes[mes] = (comprasPorMes[mes] || 0) + v.valorCompra;
-            });
-            
-            const ctx = document.getElementById('chartRelatorio');
-            if (ctx) {
-                if (window.chartRelatorio) window.chartRelatorio.destroy();
-                window.chartRelatorio = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(comprasPorMes),
-                        datasets: [{
-                            label: 'Compras (R$)',
-                            data: Object.values(comprasPorMes),
-                            backgroundColor: '#ffd700'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true
-                    }
-                });
-            }
-            
-            document.getElementById('relatorioTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Data Compra</th>
-                    <th>Valor Compra</th>
-                    <th>Despesas</th>
-                    <th>Total Investido</th>
-                    <th>Status</th>
-                </tr>
-            `;
-            
-            document.getElementById('relatorioTableBody').innerHTML = veiculosComprados.map(v => {
-                const despesas = calcularTotalDespesas(v.id);
-                const status = v.vendido ? 'Vendido' : v.deleted ? 'Arquivado' : 'Em Estoque';
-                
-                return `
-                    <tr>
-                        <td>${v.marca} ${v.modelo} ${v.ano}</td>
-                        <td>${new Date(v.dataCompra).toLocaleDateString('pt-BR')}</td>
-                        <td>R$ ${v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${(v.valorCompra + despesas).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>${status}</td>
-                    </tr>
-                `;
-            }).join('');
-            
-            window.currentRelatorioData = veiculosComprados;
-            window.currentRelatorioType = 'compras';
-        }
-
-        function gerarRelatorioEstoque(dataInicio, dataFim) {
-            const veiculosEstoque = veiculos.filter(v => !v.deleted && !v.vendido);
-            
-            const totalEstoque = veiculosEstoque.length;
-            const valorTotal = veiculosEstoque.reduce((sum, v) => sum + v.valorCompra, 0);
-            const despesasTotal = veiculosEstoque.reduce((sum, v) => sum + calcularTotalDespesas(v.id), 0);
-            const jurosTotal = veiculosEstoque.reduce((sum, v) => sum + calcularJuros(v.valorCompra, v.dataCompra), 0);
-            
-            document.getElementById('relatorioStats').innerHTML = `
-                <div class="stat-card">
-                    <h3>Veículos em Estoque</h3>
-                    <div class="value">${totalEstoque}</div>
-                </div>
-                <div class="stat-card gold">
-                    <h3>Valor Investido</h3>
-                    <div class="value">R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Despesas</h3>
-                    <div class="value">R$ ${despesasTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Juros Acumulados</h3>
-                    <div class="value">R$ ${jurosTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                </div>
-            `;
-            
-            const tempoLabels = ['0-30 dias', '31-60 dias', '60+ dias'];
-            const tempoData = [0, 0, 0];
-            
-            veiculosEstoque.forEach(v => {
-                const dias = calcularDiasEstoque(v.dataCompra);
-                if (dias <= 30) tempoData[0]++;
-                else if (dias <= 60) tempoData[1]++;
-                else tempoData[2]++;
-            });
-            
-            const ctx = document.getElementById('chartRelatorio');
-            if (ctx) {
-                if (window.chartRelatorio) window.chartRelatorio.destroy();
-                window.chartRelatorio = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: tempoLabels,
-                        datasets: [{
-                            data: tempoData,
-                            backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true
-                    }
-                });
-            }
-            
-            document.getElementById('relatorioTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Data Compra</th>
-                    <th>Valor Compra</th>
-                    <th>Despesas</th>
-                    <th>Juros</th>
-                    <th>Dias Estoque</th>
-                    <th>Total Investido</th>
-                </tr>
-            `;
-            
-            document.getElementById('relatorioTableBody').innerHTML = veiculosEstoque.map(v => {
-                const despesas = calcularTotalDespesas(v.id);
-                const juros = calcularJuros(v.valorCompra, v.dataCompra);
-                const dias = calcularDiasEstoque(v.dataCompra);
-                
-                return `
-                    <tr>
-                        <td>${v.marca} ${v.modelo} ${v.ano}</td>
-                        <td>${new Date(v.dataCompra).toLocaleDateString('pt-BR')}</td>
-                        <td>R$ ${v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${juros.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>${dias}</td>
-                        <td>R$ ${(v.valorCompra + despesas + juros).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    </tr>
-                `;
-            }).join('');
-            
-            window.currentRelatorioData = veiculosEstoque;
-            window.currentRelatorioType = 'estoque';
+        function exportarExcel() {
+            alert('Função de exportação em desenvolvimento');
         }
 
         function loadArquivoMorto() {
-            document.getElementById('btnFiltrarArquivo').click();
+            filtrarArquivo();
         }
 
-        function mostrarArquivoVeiculos() {
-            const deletados = veiculos.filter(v => v.deleted);
+        function filtrarArquivo() {
+            var tipo = document.getElementById('tipoArquivo').value;
+            var thead = document.getElementById('arquivoTableHead');
+            var tbody = document.getElementById('arquivoTableBody');
             
-            document.getElementById('arquivoTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Placa</th>
-                    <th>Data Compra</th>
-                    <th>Valor Compra</th>
-                    <th>Data Exclusão</th>
-                    <th>Ações</th>
-                </tr>
-            `;
-            
-            document.getElementById('arquivoTableBody').innerHTML = deletados.map(v => `
-                <tr>
-                    <td>${v.marca} ${v.modelo} ${v.ano}</td>
-                    <td>${v.placa || '-'}</td>
-                    <td>${new Date(v.dataCompra).toLocaleDateString('pt-BR')}</td>
-                    <td>R$ ${v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    <td>${new Date(v.deletedAt).toLocaleDateString('pt-BR')}</td>
-                    <td>
-                        <button class="btn btn-small btn-success" onclick="restaurarVeiculo('${v.id}')">Restaurar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function mostrarArquivoClientes() {
-            const deletados = clientes.filter(c => c.deleted);
-            
-            document.getElementById('arquivoTableHead').innerHTML = `
-                <tr>
-                    <th>Nome</th>
-                    <th>Telefone</th>
-                    <th>Email</th>
-                    <th>Data Exclusão</th>
-                    <th>Ações</th>
-                </tr>
-            `;
-            
-            document.getElementById('arquivoTableBody').innerHTML = deletados.map(c => `
-                <tr>
-                    <td>${c.nome}</td>
-                    <td>${c.telefone}</td>
-                    <td>${c.email || '-'}</td>
-                    <td>${new Date(c.deletedAt).toLocaleDateString('pt-BR')}</td>
-                    <td>
-                        <button class="btn btn-small btn-success" onclick="restaurarCliente('${c.id}')">Restaurar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function mostrarArquivoConsignacoes() {
-            const deletados = consignacoes.filter(c => c.deleted);
-            
-            document.getElementById('arquivoTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Cliente</th>
-                    <th>Valor Mínimo</th>
-                    <th>Data Exclusão</th>
-                    <th>Ações</th>
-                </tr>
-            `;
-            
-            document.getElementById('arquivoTableBody').innerHTML = deletados.map(c => `
-                <tr>
-                    <td>${c.veiculo}</td>
-                    <td>${c.clienteNome}</td>
-                    <td>R$ ${c.valorMinimo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    <td>${new Date(c.deletedAt).toLocaleDateString('pt-BR')}</td>
-                    <td>
-                        <button class="btn btn-small btn-success" onclick="restaurarConsignacao('${c.id}')">Restaurar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function mostrarArquivoServicoCompra() {
-            const deletados = servicoCompra.filter(s => s.deleted);
-            
-            document.getElementById('arquivoTableHead').innerHTML = `
-                <tr>
-                    <th>Veículo</th>
-                    <th>Cliente</th>
-                    <th>Orçamento</th>
-                    <th>Status</th>
-                    <th>Data Exclusão</th>
-                    <th>Ações</th>
-                </tr>
-            `;
-            
-            document.getElementById('arquivoTableBody').innerHTML = deletados.map(s => `
-                <tr>
-                    <td>${s.veiculo}</td>
-                    <td>${s.clienteNome}</td>
-                    <td>R$ ${s.orcamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    <td>${s.status}</td>
-                    <td>${new Date(s.deletedAt).toLocaleDateString('pt-BR')}</td>
-                    <td>
-                        <button class="btn btn-small btn-success" onclick="restaurarServicoCompra('${s.id}')">Restaurar</button>
-                    </td>
-                </tr>
-            `).join('');
+            if (tipo === 'veiculos') {
+                thead.innerHTML = '<tr><th>Veículo</th><th>Placa</th><th>Data Compra</th><th>Valor Compra</th><th>Data Exclusão</th><th>Ações</th></tr>';
+                var html = '';
+                for (var i = 0; i < veiculos.length; i++) {
+                    if (veiculos[i].deleted) {
+                        var v = veiculos[i];
+                        html += '<tr>';
+                        html += '<td>' + v.marca + ' ' + v.modelo + ' ' + v.ano + '</td>';
+                        html += '<td>' + (v.placa || '-') + '</td>';
+                        html += '<td>' + new Date(v.dataCompra).toLocaleDateString('pt-BR') + '</td>';
+                        html += '<td>R$ ' + v.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</td>';
+                        html += '<td>' + new Date(v.deletedAt).toLocaleDateString('pt-BR') + '</td>';
+                        html += '<td><button class="btn btn-small btn-success" onclick="restaurarVeiculo(\'' + v.id + '\')">Restaurar</button></td>';
+                        html += '</tr>';
+                    }
+                }
+                tbody.innerHTML = html || '<tr><td colspan="6" style="text-align:center;padding:20px;">Nenhum veículo arquivado</td></tr>';
+            } else if (tipo === 'clientes') {
+                thead.innerHTML = '<tr><th>Nome</th><th>Telefone</th><th>Email</th><th>Data Exclusão</th><th>Ações</th></tr>';
+                var html = '';
+                for (var i = 0; i < clientes.length; i++) {
+                    if (clientes[i].deleted) {
+                        var c = clientes[i];
+                        html += '<tr>';
+                        html += '<td>' + c.nome + '</td>';
+                        html += '<td>' + c.telefone + '</td>';
+                        html += '<td>' + (c.email || '-') + '</td>';
+                        html += '<td>' + new Date(c.deletedAt).toLocaleDateString('pt-BR') + '</td>';
+                        html += '<td><button class="btn btn-small btn-success" onclick="restaurarCliente(\'' + c.id + '\')">Restaurar</button></td>';
+                        html += '</tr>';
+                    }
+                }
+                tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:20px;">Nenhum cliente arquivado</td></tr>';
+            }
         }
 
         function restaurarVeiculo(id) {
-            const index = veiculos.findIndex(v => v.id === id);
-            if (index !== -1) {
-                veiculos[index].deleted = false;
-                delete veiculos[index].deletedAt;
-                localStorage.setItem('veiculos', JSON.stringify(veiculos));
-                loadArquivoMorto();
-                alert('Veículo restaurado com sucesso!');
+            for (var i = 0; i < veiculos.length; i++) {
+                if (veiculos[i].id === id) {
+                    veiculos[i].deleted = false;
+                    delete veiculos[i].deletedAt;
+                    break;
+                }
             }
+            localStorage.setItem('veiculos', JSON.stringify(veiculos));
+            filtrarArquivo();
+            alert('Veículo restaurado!');
         }
 
         function restaurarCliente(id) {
-            const index = clientes.findIndex(c => c.id === id);
-            if (index !== -1) {
-                clientes[index].deleted = false;
-                delete clientes[index].deletedAt;
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-                loadArquivoMorto();
-                alert('Cliente restaurado com sucesso!');
+            for (var i = 0; i < clientes.length; i++) {
+                if (clientes[i].id === id) {
+                    clientes[i].deleted = false;
+                    delete clientes[i].deletedAt;
+                    break;
+                }
             }
-        }
-
-        function restaurarConsignacao(id) {
-            const index = consignacoes.findIndex(c => c.id === id);
-            if (index !== -1) {
-                consignacoes[index].deleted = false;
-                delete consignacoes[index].deletedAt;
-                localStorage.setItem('consignacoes', JSON.stringify(consignacoes));
-                loadArquivoMorto();
-                alert('Consignação restaurada com sucesso!');
-            }
-        }
-
-        function restaurarServicoCompra(id) {
-            const index = servicoCompra.findIndex(s => s.id === id);
-            if (index !== -1) {
-                servicoCompra[index].deleted = false;
-                delete servicoCompra[index].deletedAt;
-                localStorage.setItem('servicoCompra', JSON.stringify(servicoCompra));
-                loadArquivoMorto();
-                alert('Serviço restaurado com sucesso!');
-            }
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            filtrarArquivo();
+            alert('Cliente restaurado!');
         }
 
         function loadConfiguracoes() {
             document.getElementById('taxaJuros').value = config.taxaJuros;
         }
+
+        function salvarConfig() {
+            config.taxaJuros = parseFloat(document.getElementById('taxaJuros').value);
+            localStorage.setItem('config', JSON.stringify(config));
+            alert('Configurações salvas!');
+            loadEstoque();
+            loadDashboard();
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var pageName = this.getAttribute('data-page');
+                    navegarPara(pageName);
+                });
+            });
+            
+            var searchEstoque = document.getElementById('searchEstoque');
+            if (searchEstoque) {
+                searchEstoque.addEventListener('input', function(e) {
+                    var term = e.target.value.toLowerCase();
+                    var cards = document.querySelectorAll('#estoqueList .card');
+                    cards.forEach(function(card) {
+                        var text = card.textContent.toLowerCase();
+                        card.style.display = text.indexOf(term) > -1 ? '' : 'none';
+                    });
+                });
+            }
+            
+            var searchClientes = document.getElementById('searchClientes');
+            if (searchClientes) {
+                searchClientes.addEventListener('input', function(e) {
+                    var term = e.target.value.toLowerCase();
+                    var rows = document.querySelectorAll('#clientesList tr');
+                    rows.forEach(function(row) {
+                        var text = row.textContent.toLowerCase();
+                        row.style.display = text.indexOf(term) > -1 ? '' : 'none';
+                    });
+                });
+            }
+            
+            carregarDados();
+            loadDashboard();
+        });
     </script>
 </body>
 </html>
