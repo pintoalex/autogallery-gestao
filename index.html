@@ -912,7 +912,10 @@
                     document.getElementById(pageName).classList.add('active');
                     
                     if (pageName === 'dashboard') loadDashboard();
-                    if (pageName === 'estoque') loadEstoque();
+                    if (pageName === 'estoque') {
+    veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
+    loadEstoque();
+}                                   
                     if (pageName === 'clientes') loadClientes();
                     if (pageName === 'consignacoes') loadConsignacoes();
                     if (pageName === 'servico-compra') loadServicoCompra();
@@ -1066,6 +1069,7 @@
                 localStorage.setItem('veiculos', JSON.stringify(veiculos));
                 document.getElementById('veiculoModal').style.display = 'none';
                 loadEstoque();
+                loadDashboard(); // Atualizar dashboard também                
                 alert(id ? 'Veículo atualizado com sucesso!' : 'Veículo cadastrado com sucesso!');
             });
 
