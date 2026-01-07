@@ -895,12 +895,36 @@
     </div>
 
     <script>
-        let veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
-        let clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
-        let consignacoes = JSON.parse(localStorage.getItem('consignacoes') || '[]');
-        let servicoCompra = JSON.parse(localStorage.getItem('servicoCompra') || '[]');
-        let despesas = JSON.parse(localStorage.getItem('despesas') || '[]');
-        let config = JSON.parse(localStorage.getItem('config') || '{"taxaJuros": 1.0}');
+        let veiculos = [];
+let clientes = [];
+let consignacoes = [];
+let servicoCompra = [];
+let despesas = [];
+let config = {taxaJuros: 1.0};
+
+// Carregar dados com tratamento de erro
+try {
+    const storedVeiculos = localStorage.getItem('veiculos');
+    if (storedVeiculos) veiculos = JSON.parse(storedVeiculos);
+    
+    const storedClientes = localStorage.getItem('clientes');
+    if (storedClientes) clientes = JSON.parse(storedClientes);
+    
+    const storedConsignacoes = localStorage.getItem('consignacoes');
+    if (storedConsignacoes) consignacoes = JSON.parse(storedConsignacoes);
+    
+    const storedServico = localStorage.getItem('servicoCompra');
+    if (storedServico) servicoCompra = JSON.parse(storedServico);
+    
+    const storedDespesas = localStorage.getItem('despesas');
+    if (storedDespesas) despesas = JSON.parse(storedDespesas);
+    
+    const storedConfig = localStorage.getItem('config');
+    if (storedConfig) config = JSON.parse(storedConfig);
+} catch (error) {
+    console.error('Erro ao carregar dados:', error);
+} veiculos = JSON.parse(localStorage.getItem('veiculos') || '[]');
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -1414,37 +1438,67 @@
         }
 
         function loadEstoque() {
-            const container = document.getElementById('estoqueList');
-            const activeVeiculos = veiculos.filter(v => !v.deleted && !v.vendido);
-            
-            container.innerHTML = activeVeiculos.map(veiculo => {
-                const diasEstoque = calcularDiasEstoque(veiculo.dataCompra);
-                const alertClass = diasEstoque > 60 ? 'alert-danger' : diasEstoque > 30 ? 'alert-warning' : '';
-                const badge = diasEstoque > 60 ? '<span class="badge badge-danger">+60 dias</span>' : 
-                              diasEstoque > 30 ? '<span class="badge badge-warning">+30 dias</span>' : '';
-                
-                const totalDespesas = calcularTotalDespesas(veiculo.id);
-                const jurosAcumulados = calcularJuros(veiculo.valorCompra, veiculo.dataCompra);
-                
-                return `
-                    <div class="card ${alertClass}">
-                        <div class="card-title">${veiculo.marca} ${veiculo.modelo} ${badge}</div>
-                        <div class="card-info"><strong>Ano:</strong> ${veiculo.ano}</div>
-                        <div class="card-info"><strong>Placa:</strong> ${veiculo.placa || '-'}</div>
-                        <div class="card-info"><strong>Cor:</strong> ${veiculo.cor || '-'}</div>
-                        <div class="card-info"><strong>Valor Compra:</strong> R$ ${veiculo.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Despesas:</strong> R$ ${totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Juros:</strong> R$ ${jurosAcumulados.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Dias em Estoque:</strong> ${diasEstoque}</div>
-                        <div class="card-actions">
-                            <button class="btn btn-small btn-secondary" onclick="editVeiculo('${veiculo.id}')">Editar</button>
-                            <button class="btn btn-small btn-success" onclick="openDespesas('${veiculo.id}')">💰 Despesas</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteVeiculo('${veiculo.id}')">Deletar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+    try {
+        // Recarregar do localStorage
+        const storedVeiculos = localStorage.getItem('veiculos');
+        if (storedVeiculos) {
+            veiculos = JSON.parse(storedVeiculos);
         }
+        
+        const container = document.getElementById('estoqueList');
+        if (!container) {
+            console.error('Container estoqueList não encontrado');
+            return;
+        }
+        
+        const activeVeiculos = veiculos.filter(v => !v.deleted && !v.vendido);
+        
+        console.log('=== DEBUG ESTOQUE ===');
+        console.log('Total veículos:', veiculos.length);
+        console.log('Veículos ativos:', activeVeiculos.length);
+        console.log('Dados completos:', veiculos);
+        console.log('====================');
+        
+        if (activeVeiculos.length === 0) {
+            container.innerHTML = '<p style="text-align: center; padding: 40px; color: #999; font-size: 18px;">Nenhum veículo cadastrado no estoque.<br><br>Clique em "+ Adicionar Veículo" para começar.</p>';
+            return;
+        }
+        
+        container.innerHTML = activeVeiculos.map(veiculo => {
+            const diasEstoque = calcularDiasEstoque(veiculo.dataCompra);
+            const alertClass = diasEstoque > 60 ? 'alert-danger' : diasEstoque > 30 ? 'alert-warning' : '';
+            const badge = diasEstoque > 60 ? '<span class="badge badge-danger">+60 dias</span>' : 
+                          diasEstoque > 30 ? '<span class="badge badge-warning">+30 dias</span>' : '';
+            
+            const totalDespesas = calcularTotalDespesas(veiculo.id);
+            const jurosAcumulados = calcularJuros(veiculo.valorCompra, veiculo.dataCompra);
+            
+            return `
+                <div class="card ${alertClass}">
+                    <div class="card-title">${veiculo.marca} ${veiculo.modelo} ${badge}</div>
+                    <div class="card-info"><strong>Ano:</strong> ${veiculo.ano}</div>
+                    <div class="card-info"><strong>Placa:</strong> ${veiculo.placa || '-'}</div>
+                    <div class="card-info"><strong>Cor:</strong> ${veiculo.cor || '-'}</div>
+                    <div class="card-info"><strong>Valor Compra:</strong> R$ ${veiculo.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                    <div class="card-info"><strong>Despesas:</strong> R$ ${totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                    <div class="card-info"><strong>Juros:</strong> R$ ${jurosAcumulados.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                    <div class="card-info"><strong>Dias em Estoque:</strong> ${diasEstoque}</div>
+                    <div class="card-actions">
+                        <button class="btn btn-small btn-secondary" onclick="editVeiculo('${veiculo.id}')">Editar</button>
+                        <button class="btn btn-small btn-success" onclick="openDespesas('${veiculo.id}')">💰 Despesas</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteVeiculo('${veiculo.id}')">Deletar</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        console.log('Estoque renderizado com sucesso!');
+        
+    } catch (error) {
+        console.error('ERRO em loadEstoque:', error);
+        alert('Erro ao carregar estoque: ' + error.message);
+    }
+}        }
 
         function editVeiculo(id) {
             const veiculo = veiculos.find(v => v.id === id);
