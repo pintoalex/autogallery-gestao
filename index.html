@@ -1684,8 +1684,8 @@
             
             activeVeiculos.forEach(v => {
                 const dias = calcularDiasEstoque(v.dataCompra);
-                if (dias &lt;= 30) tempoData[0]++;
-                else if (dias &lt;= 60) tempoData[1]++;
+                if (dias <= 30) tempoData[0]++;
+                else if (dias <= 60) tempoData[1]++;
                 else tempoData[2]++;
             });
             
@@ -1722,7 +1722,7 @@
             const veiculosVendidos = veiculos.filter(v => {
                 if (!v.vendido || !v.dataVenda) return false;
                 const dataVenda = new Date(v.dataVenda);
-                return dataVenda >= dataInicio && dataVenda &lt;= dataFim;
+                return dataVenda >= dataInicio && dataVenda <= dataFim;
             });
             
             const totalVendas = veiculosVendidos.length;
@@ -1813,7 +1813,7 @@
         function gerarRelatorioCompras(dataInicio, dataFim) {
             const veiculosComprados = veiculos.filter(v => {
                 const dataCompra = new Date(v.dataCompra);
-                return dataCompra >= dataInicio && dataCompra &lt;= dataFim;
+                return dataCompra >= dataInicio && dataCompra <= dataFim;
             });
             
             const totalCompras = veiculosComprados.length;
@@ -1924,8 +1924,8 @@
             
             veiculosEstoque.forEach(v => {
                 const dias = calcularDiasEstoque(v.dataCompra);
-                if (dias &lt;= 30) tempoData[0]++;
-                else if (dias &lt;= 60) tempoData[1]++;
+                if (dias <= 30) tempoData[0]++;
+                else if (dias <= 60) tempoData[1]++;
                 else tempoData[2]++;
             });
             
