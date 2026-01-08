@@ -903,24 +903,25 @@
         let config = JSON.parse(localStorage.getItem('config') || '{"taxaJuros": 1.0}');
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const pageName = this.getAttribute('data-page');
-                    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.getElementById(pageName).classList.add('active');
-                    
-                    if (pageName === 'dashboard') loadDashboard();
-                    if (pageName === 'estoque') loadEstoque();
-                    if (pageName === 'clientes') loadClientes();
-                    if (pageName === 'consignacoes') loadConsignacoes();
-                    if (pageName === 'servico-compra') loadServicoCompra();
-                    if (pageName === 'relatorios') loadRelatorios();
-                    if (pageName === 'arquivo-morto') loadArquivoMorto();
-                    if (pageName === 'configuracoes') loadConfiguracoes();
-                });
-            });
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const pageName = this.getAttribute('data-page');
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            
+            // ✅ ADICIONE ESTAS LINHAS:
+            if (pageName === 'dashboard') loadDashboard();
+            if (pageName === 'estoque') loadEstoque();
+            if (pageName === 'clientes') loadClientes();
+            if (pageName === 'consignacoes') loadConsignacoes();
+            if (pageName === 'servico-compra') loadServicoCompra();
+            if (pageName === 'relatorios') loadRelatorios();
+            if (pageName === 'arquivo-morto') loadArquivoMorto();
+            if (pageName === 'configuracoes') loadConfiguracoes();
+        });
+    });
 
             document.querySelectorAll('.close').forEach(btn => {
                 btn.addEventListener('click', function() {
