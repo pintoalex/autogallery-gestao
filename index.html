@@ -1461,35 +1461,6 @@
         `;
     }).join('');
 }
-            
-            container.innerHTML = activeVeiculos.map(veiculo => {
-                const diasEstoque = calcularDiasEstoque(veiculo.dataCompra);
-                const alertClass = diasEstoque > 60 ? 'alert-danger' : diasEstoque > 30 ? 'alert-warning' : '';
-                const badge = diasEstoque > 60 ? '<span class="badge badge-danger">+60 dias</span>' : 
-                              diasEstoque > 30 ? '<span class="badge badge-warning">+30 dias</span>' : '';
-                
-                const totalDespesas = calcularTotalDespesas(veiculo.id);
-                const jurosAcumulados = calcularJuros(veiculo.valorCompra, veiculo.dataCompra);
-                
-                return `
-                    <div class="card ${alertClass}">
-                        <div class="card-title">${veiculo.marca} ${veiculo.modelo} ${badge}</div>
-                        <div class="card-info"><strong>Ano:</strong> ${veiculo.ano}</div>
-                        <div class="card-info"><strong>Placa:</strong> ${veiculo.placa || '-'}</div>
-                        <div class="card-info"><strong>Cor:</strong> ${veiculo.cor || '-'}</div>
-                        <div class="card-info"><strong>Valor Compra:</strong> R$ ${veiculo.valorCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Despesas:</strong> R$ ${totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Juros:</strong> R$ ${jurosAcumulados.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="card-info"><strong>Dias em Estoque:</strong> ${diasEstoque}</div>
-                        <div class="card-actions">
-                            <button class="btn btn-small btn-secondary" onclick="editVeiculo('${veiculo.id}')">Editar</button>
-                            <button class="btn btn-small btn-success" onclick="openDespesas('${veiculo.id}')">💰 Despesas</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteVeiculo('${veiculo.id}')">Deletar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
 
         function editVeiculo(id) {
             const veiculo = veiculos.find(v => v.id === id);
